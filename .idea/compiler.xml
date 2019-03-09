@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="blog-consumer" />
+        <module name="blog-provider" />
+        <module name="category-consumer" />
+        <module name="category-provider" />
+        <module name="community-api" />
+        <module name="news-consumer" />
+        <module name="news-provider" />
+        <module name="post-consumer" />
+        <module name="post-provider" />
+        <module name="user-consumer" />
+        <module name="user-provider" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="blog-consumer" options="-parameters" />
+      <module name="blog-provider" options="-parameters" />
+      <module name="category-consumer" options="-parameters" />
+      <module name="category-provider" options="-parameters" />
+      <module name="community" options="" />
+      <module name="community-api" options="-parameters" />
+      <module name="news-consumer" options="-parameters" />
+      <module name="news-provider" options="-parameters" />
+      <module name="post-consumer" options="-parameters" />
+      <module name="post-provider" options="-parameters" />
+      <module name="user-consumer" options="-parameters" />
+      <module name="user-provider" options="-parameters" />
+    </option>
+  </component>
+</project>
