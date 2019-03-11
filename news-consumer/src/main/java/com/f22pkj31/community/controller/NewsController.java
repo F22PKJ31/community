@@ -1,7 +1,6 @@
 package com.f22pkj31.community.controller;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.News;
 import com.f22pkj31.community.entity.NewsComment;
@@ -58,7 +57,7 @@ public class NewsController {
     }
 
     @RequestMapping("commentList")
-    public IPage<NewsComment> commentList(@RequestBody PageIn<NewsComment> pageIn) {
+    public Object commentList(@RequestBody PageIn<NewsComment> pageIn) {
         return newsClientService.commentList(pageIn);
     }
 

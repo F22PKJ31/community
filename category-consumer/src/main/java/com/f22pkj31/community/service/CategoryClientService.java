@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @FeignClient(value = "category-provider")
-@RequestMapping("/category/blog")
+@RequestMapping("/provider/category")
 public interface CategoryClientService {
 
     @RequestMapping("addCategory")
@@ -24,6 +24,12 @@ public interface CategoryClientService {
     @RequestMapping("deleteCategory")
     public boolean deleteCategory(@RequestBody CommonId commonId);
 
-    @RequestMapping("categoryList")
+    @RequestMapping("categoryListByPage")
     public Object categoryList(@RequestBody PageIn<Category> pageIn);
+
+    @RequestMapping("categoryList")
+    public Object categoryList();
+
+    @RequestMapping("updateCategory")
+    boolean updateCategory(Category category);
 }

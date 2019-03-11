@@ -35,7 +35,8 @@ public class PostController {
 
     @RequestMapping("postList")
     public Object postList(@RequestBody PageIn<Post> pageIn) {
-        return postService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+        return postService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<Post>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("author_name", pageIn.getT().getAuthorName() == null ? "" : pageIn.getT().getAuthorName()));
     }
 
     @RequestMapping("sendPost")
@@ -65,7 +66,9 @@ public class PostController {
 
     @RequestMapping("commentList")
     public IPage<PostComment> commentList(@RequestBody PageIn<PostComment> pageIn) {
-        return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+        return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<PostComment>()
+                .like("post_title", pageIn.getT().getPostTitle() == null ? "" : pageIn.getT().getPostTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()));
     }
 
     @RequestMapping("deleteComment")

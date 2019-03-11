@@ -1,7 +1,6 @@
 package com.f22pkj31.community.controller;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.community.entity.Post;
@@ -58,7 +57,7 @@ public class PostController {
     }
 
     @RequestMapping("commentList")
-    public IPage<PostComment> commentList(@RequestBody PageIn<PostComment> pageIn) {
+    public Object commentList(@RequestBody PageIn<PostComment> pageIn) {
         return postClientService.commentList(pageIn);
     }
 

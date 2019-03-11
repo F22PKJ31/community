@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-09
+ * @since 2019-03-10
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -26,9 +27,9 @@ public class User implements Serializable {
     @TableId(value = "user_id", type = IdType.AUTO)
     private Integer userId;
 
-    private String username;
+    private String userName;
 
-    private String password;
+    private String passwd;
 
     private String mobile;
 
@@ -36,7 +37,9 @@ public class User implements Serializable {
 
     private String email;
 
-    private Integer sex;
+    private String sex;
+
+    private LocalDateTime createTime;
 
 
 }

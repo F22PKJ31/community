@@ -33,6 +33,11 @@ public class UserController {
         return userService.save(user);
     }
 
+    @RequestMapping("updateUser")
+    public boolean updateUser(@RequestBody User user) {
+        return userService.updateById(user);
+    }
+
     @RequestMapping("getUser")
     public User getUser(@RequestBody CommonId commonId) {
         return userService.getById(commonId.getId());
@@ -50,7 +55,8 @@ public class UserController {
 
     @RequestMapping("userList")
     public IPage<User> userList(@RequestBody PageIn<User> pageIn) {
-        return userService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+        return userService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<User>()
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()));
     }
 
 }

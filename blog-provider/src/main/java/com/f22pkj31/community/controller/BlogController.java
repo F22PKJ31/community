@@ -9,6 +9,7 @@ import com.f22pkj31.community.service.IBlogCollectionService;
 import com.f22pkj31.community.service.IBlogCommentService;
 import com.f22pkj31.community.service.IBlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,10 +39,13 @@ public class BlogController {
 
     @RequestMapping("blogList")
     public Object blogList(@RequestBody PageIn<Blog> pageIn) {
-        if (pageIn.getT() == null) {
-            return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), null);
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("author_name", pageIn.getT().getAuthorName() == null ? "" : pageIn.getT().getAuthorName());
+        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
+            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
         }
-        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper);
+
     }
 
     @RequestMapping("sendBlog")

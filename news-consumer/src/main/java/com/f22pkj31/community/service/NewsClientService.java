@@ -1,6 +1,5 @@
 package com.f22pkj31.community.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.News;
 import com.f22pkj31.community.entity.NewsComment;
@@ -32,7 +31,7 @@ public interface NewsClientService {
     Object sendComment(@RequestBody NewsComment newsComment);
 
     @RequestMapping("commentList")
-    IPage<NewsComment> commentList(@RequestBody PageIn<NewsComment> pageIn);
+    Object commentList(@RequestBody PageIn<NewsComment> pageIn);
 
     @RequestMapping("deleteComment")
     Object deleteComment(@RequestBody CommonId commonId);

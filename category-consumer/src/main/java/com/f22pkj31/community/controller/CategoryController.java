@@ -30,6 +30,11 @@ public class CategoryController {
         return categoryClientService.addCategory(category);
     }
 
+    @RequestMapping("updateCategory")
+    public boolean updateCategory(@RequestBody Category category) {
+        return categoryClientService.updateCategory(category);
+    }
+
     @RequestMapping("getCategory")
     public Category getCategory(@RequestBody CommonId commonId) {
         return categoryClientService.getCategory(commonId);
@@ -45,9 +50,14 @@ public class CategoryController {
         return categoryClientService.deleteCategory(commonId);
     }
 
-    @RequestMapping("categoryList")
+    @RequestMapping("categoryListByPage")
     public Object categoryList(@RequestBody PageIn<Category> pageIn) {
         return categoryClientService.categoryList(pageIn);
+    }
+
+    @RequestMapping("categoryList")
+    public Object categoryList() {
+        return categoryClientService.categoryList();
     }
 
 }

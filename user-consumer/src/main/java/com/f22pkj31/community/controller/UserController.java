@@ -1,7 +1,6 @@
 package com.f22pkj31.community.controller;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.community.entity.User;
@@ -31,6 +30,12 @@ public class UserController {
         return userClientService.addUser(user);
     }
 
+    @RequestMapping("updateUser")
+    public boolean updateUser(@RequestBody User user) {
+        return userClientService.updateUser(user);
+    }
+
+
     @RequestMapping("getUser")
     public User getUser(@RequestBody CommonId commonId) {
         return userClientService.getUser(commonId);
@@ -47,7 +52,7 @@ public class UserController {
     }
 
     @RequestMapping("userList")
-    public IPage<User> userList(@RequestBody PageIn<User> pageIn) {
+    public Object userList(@RequestBody PageIn<User> pageIn) {
         return userClientService.userList(pageIn);
     }
 

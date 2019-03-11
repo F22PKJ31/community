@@ -5,11 +5,11 @@ import com.f22pkj31.community.entity.Post;
 
 /**
  * <p>
- * Mapper 接口
+ *  Mapper 接口
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-09
+ * @since 2019-03-10
  */
 public interface PostMapper extends BaseMapper<Post> {
 

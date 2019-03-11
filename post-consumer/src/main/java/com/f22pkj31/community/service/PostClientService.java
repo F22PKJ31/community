@@ -1,6 +1,5 @@
 package com.f22pkj31.community.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.community.entity.Post;
@@ -32,7 +31,7 @@ public interface PostClientService {
     Object sendComment(@RequestBody PostComment postComment);
 
     @RequestMapping("commentList")
-    IPage<PostComment> commentList(@RequestBody PageIn<PostComment> pageIn);
+    Object commentList(@RequestBody PageIn<PostComment> pageIn);
 
     @RequestMapping("deleteComment")
     Object deleteComment(@RequestBody CommonId commonId);

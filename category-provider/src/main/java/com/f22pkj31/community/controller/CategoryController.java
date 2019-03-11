@@ -25,6 +25,11 @@ public class CategoryController {
         return categoryService.save(category);
     }
 
+    @RequestMapping("updateCategory")
+    public boolean updateCategory(@RequestBody Category category) {
+        return categoryService.updateById(category);
+    }
+
     @RequestMapping("getCategory")
     public Category getCategory(@RequestBody CommonId commonId) {
         return categoryService.getById(commonId.getId());
@@ -40,9 +45,16 @@ public class CategoryController {
         return categoryService.removeById(commonId.getId());
     }
 
+    @RequestMapping("categoryListByPage")
+    public Object categoryList(@RequestBody PageIn<Category> pageIn) {
+        IPage<Category> page = categoryService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
+                new QueryWrapper<Category>().like("category_name", pageIn.getT().getCategoryName() == null ? "" : pageIn.getT().getCategoryName()));
+        return page;
+    }
+
     @RequestMapping("categoryList")
-    public IPage<Category> categoryList(@RequestBody PageIn<Category> pageIn) {
-        return categoryService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+    public Object categoryList() {
+        return categoryService.list();
     }
 
 }

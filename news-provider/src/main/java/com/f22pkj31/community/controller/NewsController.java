@@ -11,6 +11,7 @@ import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.community.service.INewsCommentService;
 import com.f22pkj31.community.service.INewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,12 @@ public class NewsController {
 
     @RequestMapping("newsList")
     public Object newsList(@RequestBody PageIn<News> pageIn) {
-        return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+        QueryWrapper<News> queryWrapper = new QueryWrapper<News>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
+        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
+            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
+        }
+        return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper);
     }
 
     @RequestMapping("sendNews")
@@ -65,7 +71,9 @@ public class NewsController {
 
     @RequestMapping("commentList")
     public IPage<NewsComment> commentList(@RequestBody PageIn<NewsComment> pageIn) {
-        return newsCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+        return newsCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
+                new QueryWrapper<NewsComment>().like("news_title", pageIn.getT().getNewsTitle() == null ? "" : pageIn.getT().getNewsTitle())
+                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()));
     }
 
     @RequestMapping("deleteComment")

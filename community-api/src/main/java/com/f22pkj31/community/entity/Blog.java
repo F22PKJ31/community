@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- *
+ * 
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-09
+ * @since 2019-03-10
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -23,6 +23,9 @@ import java.time.LocalDateTime;
 public class Blog implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @TableId(value = "blog_id", type = IdType.AUTO)
+    private Integer blogId;
 
     private String title;
 
@@ -37,9 +40,6 @@ public class Blog implements Serializable {
     private String authorName;
 
     private Integer categoryId;
-
-    @TableId(value = "blog_id", type = IdType.AUTO)
-    private Integer blogId;
 
     private String categoryName;
 

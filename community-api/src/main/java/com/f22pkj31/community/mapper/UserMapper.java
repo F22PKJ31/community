@@ -9,7 +9,7 @@ import com.f22pkj31.community.entity.User;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-09
+ * @since 2019-03-10
  */
 public interface UserMapper extends BaseMapper<User> {
 
