@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/community?useUnicode=true&useSSL=false&characterEncoding=utf8
+    url: jdbc:mysql://47.95.14.18:3306/community?useUnicode=true&useSSL=false&characterEncoding=utf8
     username: root
-    password: root
+    password: uAiqwVwjJ8-i
     type: com.alibaba.druid.pool.DruidDataSource
   cloud:
     nacos:
@@ -13,4 +13,8 @@ spring:
     name: blog-provider
 server:
   port: 8001
+debug: false
+logging:
+  level:
+    com.f22pkj31.community: debug
 

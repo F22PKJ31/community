@@ -37,5 +37,7 @@ public class PostComment implements Serializable {
 
     private String userName;
 
+    private String postId;
+
 
 }
