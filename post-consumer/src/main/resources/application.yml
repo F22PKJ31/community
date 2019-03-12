@@ -11,9 +11,14 @@ spring:
         server-addr: 127.0.0.1:8848
   application:
     name: post-consumer
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,lasspath:/static/,classpath:/public/,file:${resources_path}
 debug: false
 logging:
   level:
     com.f22pkj31.community: debug
 server:
   port: 8013
+
+resources_path: C:\\Users\\11362\\file
+
