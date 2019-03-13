@@ -11,8 +11,6 @@ spring:
         server-addr: 127.0.0.1:8848
   application:
     name: post-consumer
-  resources:
-    static-locations: classpath:/META-INF/resources/,classpath:/resources/,lasspath:/static/,classpath:/public/,file:${resources_path}
 debug: false
 logging:
   level:
