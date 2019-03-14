@@ -25,12 +25,8 @@ public class LoginAuthFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse rep = (HttpServletResponse) response;
-        String[] allowDomains = {"http://localhost:8080"};
-        Set allowOrigins = new HashSet(Arrays.asList(allowDomains));
         String originHeads = req.getHeader("Origin");
-        if (allowOrigins.contains(originHeads)) {
-            rep.setHeader("Access-Control-Allow-Origin", originHeads);
-        }
+        rep.setHeader("Access-Control-Allow-Origin", originHeads);
         rep.setHeader("Access-Control-Allow-Credentials", "true");
         rep.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
         rep.setHeader("Access-Control-Max-Age", "3600");

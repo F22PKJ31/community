@@ -7,7 +7,7 @@ spring:
     name: file-api
   servlet:
     multipart:
-      max-file-size: 100MB
+      max-file-size: 300MB
       max-request-size: 300MB
   resources:
     static-locations: classpath:/META-INF/resources/,classpath:/resources/,lasspath:/static/,classpath:/public/,file:${resources_path}
@@ -17,4 +17,5 @@ logging:
     com.f22pkj31.community: debug
 server:
   port: 8010
-resources_path: C:\\Users\\11362\\file
+#resources_path: C:\\Users\\11362\\file
+resources_path: /Users/bo.fan/file/

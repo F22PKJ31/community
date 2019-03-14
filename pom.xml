@@ -80,5 +80,6 @@
         <module>blog-provider</module>
         <module>category-provider</module>
         <module>category-consumer</module>
+        <module>file-api</module>
     </modules>
 </project>

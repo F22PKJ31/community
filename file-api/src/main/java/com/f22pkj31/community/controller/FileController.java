@@ -2,6 +2,8 @@ package com.f22pkj31.community.controller;
 
 import com.f22pkj31.community.entity.UploadResp;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +18,8 @@ import java.io.IOException;
 @Slf4j
 public class FileController {
 
-    private final static String filePath = "C:\\Users\\11362\\file\\";
+    @Value("${resources_path}")
+    private String filePath;
 
     @RequestMapping("uploadFile")
     public UploadResp uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
