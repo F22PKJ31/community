@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 /**
  * <p>
  * 前端控制器
@@ -27,12 +29,12 @@ public class CategoryController {
 
     @RequestMapping("addCategory")
     public boolean addCategory(@RequestBody Category category) {
-        return categoryClientService.addCategory(category);
+        return categoryClientService.addCategory(category.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("updateCategory")
     public boolean updateCategory(@RequestBody Category category) {
-        return categoryClientService.updateCategory(category);
+        return categoryClientService.updateCategory(category.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("getCategory")

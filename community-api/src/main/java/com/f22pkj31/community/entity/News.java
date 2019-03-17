@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-10
+ * @since 2019-03-16
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -29,7 +29,7 @@ public class News implements Serializable {
 
     private String title;
 
-    private String userId;
+    private Integer userId;
 
     private Long readCount;
 

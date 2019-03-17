@@ -1,15 +1,14 @@
 package com.f22pkj31.community.controller;
 
 
-import com.f22pkj31.community.entity.CommonId;
-import com.f22pkj31.community.entity.News;
-import com.f22pkj31.community.entity.NewsComment;
-import com.f22pkj31.community.entity.PageIn;
+import com.f22pkj31.community.entity.*;
 import com.f22pkj31.community.service.NewsClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -33,7 +32,7 @@ public class NewsController {
 
     @RequestMapping("sendNews")
     public Object sendNews(@RequestBody News news) {
-        return newsClientService.sendNews(news);
+        return newsClientService.sendNews(news.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("deleteNews")
@@ -48,12 +47,12 @@ public class NewsController {
 
     @RequestMapping("updateNews")
     public Object updateNews(@RequestBody News news) {
-        return newsClientService.updateNews(news);
+        return newsClientService.updateNews(news.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("sendComment")
     public Object sendComment(@RequestBody NewsComment newsComment) {
-        return newsClientService.sendComment(newsComment);
+        return newsClientService.sendComment(newsComment.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("commentList")
@@ -66,10 +65,24 @@ public class NewsController {
         return newsClientService.deleteComment(commonId);
     }
 
+    @RequestMapping("collectionList")
+    public Object collectionList(@RequestBody PageIn<NewsCollection> pageIn) {
+        return newsClientService.collectionList(pageIn);
+    }
 
-    @RequestMapping("deleteCollect")
-    public boolean deleteCollect(@RequestBody CommonId commonId) {
-        return newsClientService.deleteCollect(commonId);
+    @RequestMapping("deleteCollection")
+    public Object deleteCollection(@RequestBody CommonId commonId) {
+        return newsClientService.deleteCollection(commonId);
+    }
+
+    @RequestMapping("collectionListByUserId")
+    public Object collectionListByUserId(@RequestBody PageIn<NewsCollection> pageIn) {
+        return newsClientService.collectionListByUserId(pageIn);
+    }
+
+    @RequestMapping("countComment")
+    public int countComment(@RequestBody CommonId commonId) {
+        return newsClientService.countComment(commonId);
     }
 
 }

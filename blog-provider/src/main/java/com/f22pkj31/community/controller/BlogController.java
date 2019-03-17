@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 前端控制器
  * </p>
  *
- * @author f22pkj31
+ * @user f22pkj31
  * @since 2019-02-23
  */
 @RestController
@@ -40,11 +40,14 @@ public class BlogController {
     @RequestMapping("blogList")
     public Object blogList(@RequestBody PageIn<Blog> pageIn) {
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
-                .like("author_name", pageIn.getT().getAuthorName() == null ? "" : pageIn.getT().getAuthorName());
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
         if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
             queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
         }
-        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper);
+        if (!ObjectUtils.isEmpty(pageIn.getT().getUserId())) {
+            queryWrapper.eq("user_id", pageIn.getT().getUserId());
+        }
+        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("create_time"));
 
     }
 
@@ -75,9 +78,12 @@ public class BlogController {
 
     @RequestMapping("commentList")
     public IPage<BlogComment> commentList(@RequestBody PageIn<BlogComment> pageIn) {
+        if (pageIn.getT().getBlogId() != null) {
+            return blogCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
+        }
         return blogCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
                 new QueryWrapper<BlogComment>().like("blog_title", pageIn.getT().getBlogTitle() == null ? "" : pageIn.getT().getBlogTitle())
-                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()));
+                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()).orderByDesc("create_time"));
     }
 
     @RequestMapping("deleteComment")
@@ -94,12 +100,24 @@ public class BlogController {
     public IPage<BlogCollection> collectionList(@RequestBody PageIn<BlogCollection> pageIn) {
         return blogCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
                 new QueryWrapper<BlogCollection>().like("blog_title", pageIn.getT().getBlogTitle() == null ? "" : pageIn.getT().getBlogTitle())
-                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()));
+                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName())
+                        .orderByDesc("create_time"));
     }
 
     @RequestMapping("deleteCollection")
     public Object deleteCollection(@RequestBody CommonId commonId) {
         return blogCollectionService.removeById(commonId.getId());
+    }
+
+    @RequestMapping("collectionListByUserId")
+    public Object collectionListByUserId(@RequestBody PageIn<BlogCollection> pageIn) {
+        return blogCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+    }
+
+
+    @RequestMapping("countComment")
+    public int countComment(@RequestBody CommonId commonId) {
+        return blogCommentService.count(new QueryWrapper<BlogComment>().eq("blog_id", commonId.getId()));
     }
 
 

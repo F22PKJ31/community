@@ -44,4 +44,10 @@ public interface BlogClientService {
 
     @RequestMapping("deleteCollection")
     public Object deleteCollection(@RequestBody CommonId commonId);
+
+    @RequestMapping("collectionListByUserId")
+    public Object collectionListByUserId(@RequestBody PageIn<BlogCollection> pageIn);
+
+    @RequestMapping("countComment")
+    public int countComment(@RequestBody CommonId commonId);
 }

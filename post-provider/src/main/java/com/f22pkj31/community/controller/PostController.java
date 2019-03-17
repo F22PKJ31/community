@@ -4,13 +4,12 @@ package com.f22pkj31.community.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.f22pkj31.community.entity.CommonId;
-import com.f22pkj31.community.entity.PageIn;
-import com.f22pkj31.community.entity.Post;
-import com.f22pkj31.community.entity.PostComment;
+import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.service.IPostCollectionService;
 import com.f22pkj31.community.service.IPostCommentService;
 import com.f22pkj31.community.service.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,10 +32,17 @@ public class PostController {
     @Autowired
     private IPostCommentService postCommentService;
 
+    @Autowired
+    private IPostCollectionService postCollectionService;
+
     @RequestMapping("postList")
     public Object postList(@RequestBody PageIn<Post> pageIn) {
-        return postService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<Post>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
-                .like("author_name", pageIn.getT().getAuthorName() == null ? "" : pageIn.getT().getAuthorName()));
+        QueryWrapper<Post> queryWrapper = new QueryWrapper<Post>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()).orderByDesc("create_time");
+        if (!ObjectUtils.isEmpty(pageIn.getT().getUserId())) {
+            queryWrapper.eq("user_id", pageIn.getT().getUserId());
+        }
+        return postService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper);
     }
 
     @RequestMapping("sendPost")
@@ -66,14 +72,40 @@ public class PostController {
 
     @RequestMapping("commentList")
     public IPage<PostComment> commentList(@RequestBody PageIn<PostComment> pageIn) {
+        if (pageIn.getT().getPostId() != null) {
+            return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+        }
         return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<PostComment>()
                 .like("post_title", pageIn.getT().getPostTitle() == null ? "" : pageIn.getT().getPostTitle())
-                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()));
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName())
+                .orderByDesc("create_time"));
     }
 
     @RequestMapping("deleteComment")
     public Object deleteComment(@RequestBody CommonId commonId) {
         return postCommentService.removeById(commonId.getId());
+    }
+
+    @RequestMapping("collectionList")
+    public IPage<PostCollection> collectionList(@RequestBody PageIn<PostCollection> pageIn) {
+        return postCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
+                new QueryWrapper<PostCollection>().like("post_title", pageIn.getT().getPostTitle() == null ? "" : pageIn.getT().getPostTitle())
+                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()).orderByDesc("create_time"));
+    }
+
+    @RequestMapping("deleteCollection")
+    public Object deleteCollection(@RequestBody CommonId commonId) {
+        return postCollectionService.removeById(commonId.getId());
+    }
+
+    @RequestMapping("collectionListByUserId")
+    public Object collectionListByUserId(@RequestBody PageIn<PostCollection> pageIn) {
+        return postCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
+    }
+
+    @RequestMapping("countComment")
+    public int countComment(@RequestBody CommonId commonId) {
+        return postCommentService.count(new QueryWrapper<PostComment>().eq("post_id", commonId.getId()));
     }
 
 }

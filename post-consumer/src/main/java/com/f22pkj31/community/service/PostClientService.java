@@ -1,9 +1,7 @@
 package com.f22pkj31.community.service;
 
-import com.f22pkj31.community.entity.CommonId;
-import com.f22pkj31.community.entity.PageIn;
-import com.f22pkj31.community.entity.Post;
-import com.f22pkj31.community.entity.PostComment;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.f22pkj31.community.entity.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +34,15 @@ public interface PostClientService {
     @RequestMapping("deleteComment")
     Object deleteComment(@RequestBody CommonId commonId);
 
-    @RequestMapping("deleteCollect")
-    public boolean deleteCollect(@RequestBody CommonId commonId);
+    @RequestMapping("collectionList")
+    IPage<PostCollection> collectionList(@RequestBody PageIn<PostCollection> pageIn);
+
+    @RequestMapping("deleteCollection")
+    Object deleteCollection(@RequestBody CommonId commonId);
+
+    @RequestMapping("collectionListByUserId")
+    Object collectionListByUserId(@RequestBody PageIn<PostCollection> pageIn);
+
+    @RequestMapping("countComment")
+    public int countComment(@RequestBody CommonId commonId);
 }

@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 服务实现类
+ *  服务实现类
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-09
+ * @since 2019-03-16
  */
 @Service
 public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements INewsService {

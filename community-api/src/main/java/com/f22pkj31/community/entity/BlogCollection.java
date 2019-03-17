@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-10
+ * @since 2019-03-16
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -27,15 +27,15 @@ public class BlogCollection implements Serializable {
     @TableId(value = "collection_id", type = IdType.AUTO)
     private Integer collectionId;
 
-    private Integer blogId;
-
     private Integer userId;
+
+    private String userName;
+
+    private Integer blogId;
 
     private LocalDateTime createTime;
 
     private String blogTitle;
-
-    private String userName;
 
 
 }

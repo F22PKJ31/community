@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 /**
  * <p>
  * 前端控制器
@@ -27,12 +29,12 @@ public class UserController {
 
     @RequestMapping("addUser")
     public boolean addUser(@RequestBody User user) {
-        return userClientService.addUser(user);
+        return userClientService.addUser(user.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("updateUser")
     public boolean updateUser(@RequestBody User user) {
-        return userClientService.updateUser(user);
+        return userClientService.updateUser(user.setCreateTime(LocalDateTime.now()));
     }
 
 

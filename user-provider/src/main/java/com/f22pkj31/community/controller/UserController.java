@@ -56,7 +56,7 @@ public class UserController {
     @RequestMapping("userList")
     public IPage<User> userList(@RequestBody PageIn<User> pageIn) {
         return userService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<User>()
-                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()));
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()).orderByDesc("create_time"));
     }
 
 }

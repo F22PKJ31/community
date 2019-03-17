@@ -37,7 +37,7 @@ public class CategoryController {
 
     @RequestMapping("getCategoryByName")
     public Category getCategoryByName(@RequestBody Category category) {
-        return categoryService.getOne(new QueryWrapper<>(category));
+        return categoryService.getOne(new QueryWrapper<>(category).orderByDesc("create_time"));
     }
 
     @RequestMapping("deleteCategory")
@@ -48,7 +48,8 @@ public class CategoryController {
     @RequestMapping("categoryListByPage")
     public Object categoryList(@RequestBody PageIn<Category> pageIn) {
         IPage<Category> page = categoryService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
-                new QueryWrapper<Category>().like("category_name", pageIn.getT().getCategoryName() == null ? "" : pageIn.getT().getCategoryName()));
+                new QueryWrapper<Category>().like("category_name", pageIn.getT().getCategoryName() == null ? "" : pageIn.getT().getCategoryName())
+                        .orderByDesc("create_time"));
         return page;
     }
 

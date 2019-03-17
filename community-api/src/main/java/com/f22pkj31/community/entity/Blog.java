@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-10
+ * @since 2019-03-16
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,11 +33,11 @@ public class Blog implements Serializable {
 
     private LocalDateTime createTime;
 
-    private Integer authorId;
+    private Integer userId;
 
     private Integer readCount;
 
-    private String authorName;
+    private String userName;
 
     private Integer categoryId;
 

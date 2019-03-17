@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 /**
  * <p>
  * 前端控制器
@@ -30,7 +32,7 @@ public class BlogController {
 
     @RequestMapping("sendBlog")
     public Object sendBlog(@RequestBody Blog blog) {
-        return blogClientService.sendBlog(blog);
+        return blogClientService.sendBlog(blog.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("deleteBlog")
@@ -45,12 +47,12 @@ public class BlogController {
 
     @RequestMapping("updateBlog")
     public Object updateBlog(@RequestBody Blog blog) {
-        return blogClientService.updateBlog(blog);
+        return blogClientService.updateBlog(blog.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("sendComment")
     public Object sendComment(@RequestBody BlogComment blogComment) {
-        return blogClientService.sendComment(blogComment);
+        return blogClientService.sendComment(blogComment.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("commentList")
@@ -65,13 +67,12 @@ public class BlogController {
 
     @RequestMapping("sendCollection")
     public Object sendCollection(@RequestBody BlogCollection blogCollection) {
-        return blogClientService.sendCollection(blogCollection);
+        return blogClientService.sendCollection(blogCollection.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("collectionList")
     public Object collectionList(@RequestBody PageIn<BlogCollection> pageIn) {
-        Object o = blogClientService.collectionList(pageIn);
-        return o;
+        return blogClientService.collectionList(pageIn);
     }
 
     @RequestMapping("deleteCollection")
@@ -79,4 +80,13 @@ public class BlogController {
         return blogClientService.deleteCollection(commonId);
     }
 
+    @RequestMapping("collectionListByUserId")
+    public Object collectionListByUserId(@RequestBody PageIn<BlogCollection> pageIn) {
+        return blogClientService.collectionListByUserId(pageIn);
+    }
+
+    @RequestMapping("countComment")
+    public int countComment(@RequestBody CommonId commonId) {
+        return blogClientService.countComment(commonId);
+    }
 }

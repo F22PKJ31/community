@@ -9,7 +9,7 @@ import com.f22pkj31.community.entity.News;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-10
+ * @since 2019-03-16
  */
 public interface NewsMapper extends BaseMapper<News> {
 
