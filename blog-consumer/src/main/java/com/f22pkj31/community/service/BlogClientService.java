@@ -50,4 +50,16 @@ public interface BlogClientService {
 
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId);
+
+    @RequestMapping("blogListOrderByRead")
+    public Object blogListOrderByRead(@RequestBody PageIn<Blog> pageIn);
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId);
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId);
+
+    @RequestMapping("commentDetail")
+    public BlogComment commentDetail(@RequestBody CommonId commonId);
 }

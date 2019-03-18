@@ -109,4 +109,33 @@ public class NewsController {
     public int countComment(@RequestBody CommonId commonId) {
         return newsCommentService.count(new QueryWrapper<NewsComment>().eq("news_id", commonId.getId()));
     }
+
+    @RequestMapping("newsListOrderByRead")
+    public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn){
+        QueryWrapper<News> queryWrapper = new QueryWrapper<News>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
+        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
+            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
+        }
+        return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("read_count"));
+    }
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId) {
+        News news = newsService.getById(commonId.getId());
+        news.setReadCount(news.getReadCount() + 1);
+        newsService.updateById(news);
+    }
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId) {
+        News news = newsService.getById(commonId.getId());
+        news.setReadCount(news.getReadCount() - 1);
+        newsService.updateById(news);
+    }
+
+    @RequestMapping("commentDetail")
+    public NewsComment commentDetail(@RequestBody CommonId commonId) {
+        return newsCommentService.getById(commonId.getId());
+    }
 }

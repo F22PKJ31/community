@@ -52,6 +52,9 @@ public class BlogController {
 
     @RequestMapping("sendComment")
     public Object sendComment(@RequestBody BlogComment blogComment) {
+        CommonId commonId = new CommonId();
+        commonId.setId(blogComment.getBlogId());
+        blogClientService.addReadCount(commonId);
         return blogClientService.sendComment(blogComment.setCreateTime(LocalDateTime.now()));
     }
 
@@ -62,7 +65,10 @@ public class BlogController {
 
     @RequestMapping("deleteComment")
     public Object deleteComment(@RequestBody CommonId commonId) {
-        return blogClientService.deleteComment(commonId);
+        CommonId id = new CommonId();
+        BlogComment blogComment = blogClientService.commentDetail(commonId);
+        id.setId(blogComment.getBlogId());
+        return blogClientService.deleteComment(id);
     }
 
     @RequestMapping("sendCollection")
@@ -89,4 +95,21 @@ public class BlogController {
     public int countComment(@RequestBody CommonId commonId) {
         return blogClientService.countComment(commonId);
     }
+
+    @RequestMapping("blogListOrderByRead")
+    public Object blogListOrderByRead(@RequestBody PageIn<Blog> pageIn){
+        return blogClientService.blogListOrderByRead(pageIn);
+    }
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId) {
+        blogClientService.addReadCount(commonId);
+    }
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId) {
+        blogClientService.subReadCount(commonId);
+    }
+
+
 }

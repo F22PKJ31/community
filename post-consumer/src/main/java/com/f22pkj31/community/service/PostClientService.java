@@ -45,4 +45,16 @@ public interface PostClientService {
 
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId);
+
+    @RequestMapping("postListOrderByRead")
+    public Object postListOrderByRead(@RequestBody PageIn<Post> pageIn);
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId);
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId);
+
+    @RequestMapping("commentDetail")
+    public PostComment commentDetail(@RequestBody CommonId commonId);
 }

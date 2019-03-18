@@ -68,7 +68,7 @@ public class BlogController {
 
     @RequestMapping("updateBlog")
     public Object updateBlog(@RequestBody Blog blog) {
-        return blogService.updateById(blog);
+        return blogService.saveOrUpdate(blog);
     }
 
     @RequestMapping("sendComment")
@@ -120,5 +120,37 @@ public class BlogController {
         return blogCommentService.count(new QueryWrapper<BlogComment>().eq("blog_id", commonId.getId()));
     }
 
+    @RequestMapping("blogListOrderByRead")
+    public Object blogListOrderByRead(@RequestBody PageIn<Blog> pageIn) {
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
+        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
+            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
+        }
+        if (!ObjectUtils.isEmpty(pageIn.getT().getUserId())) {
+            queryWrapper.eq("user_id", pageIn.getT().getUserId());
+        }
+        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("read_count"));
+
+    }
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId) {
+        Blog blog = blogService.getById(commonId.getId());
+        blog.setReadCount(blog.getReadCount() + 1);
+        blogService.updateById(blog);
+    }
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId) {
+        Blog blog = blogService.getById(commonId.getId());
+        blog.setReadCount(blog.getReadCount() - 1);
+        blogService.updateById(blog);
+    }
+
+    @RequestMapping("commentDetail")
+    public BlogComment commentDetail(@RequestBody CommonId commonId) {
+        return blogCommentService.getById(commonId.getId());
+    }
 
 }

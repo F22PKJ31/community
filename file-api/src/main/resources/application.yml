@@ -17,5 +17,9 @@ logging:
     com.f22pkj31.community: debug
 server:
   port: 8010
+  tomcat:
+    basedir: C:\\Users\\11362\\temp\\
 resources_path: C:\\Users\\11362\\file\\
+
+
 #resources_path: /Users/bo.fan/file/

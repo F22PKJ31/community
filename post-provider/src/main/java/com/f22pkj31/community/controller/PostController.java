@@ -62,7 +62,7 @@ public class PostController {
 
     @RequestMapping("updatePost")
     public Object updatePost(@RequestBody Post post) {
-        return postService.updateById(post);
+        return postService.saveOrUpdate(post);
     }
 
     @RequestMapping("sendComment")
@@ -108,4 +108,32 @@ public class PostController {
         return postCommentService.count(new QueryWrapper<PostComment>().eq("post_id", commonId.getId()));
     }
 
+    @RequestMapping("postListOrderByRead")
+    public Object postListOrderByRead(@RequestBody PageIn<Post> pageIn) {
+        QueryWrapper<Post> queryWrapper = new QueryWrapper<Post>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()).orderByDesc("read_count");
+        if (!ObjectUtils.isEmpty(pageIn.getT().getUserId())) {
+            queryWrapper.eq("user_id", pageIn.getT().getUserId());
+        }
+        return postService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper);
+    }
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId) {
+        Post post = postService.getById(commonId.getId());
+        post.setReadCount(post.getReadCount() + 1);
+        postService.updateById(post);
+    }
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId) {
+        Post post = postService.getById(commonId.getId());
+        post.setReadCount(post.getReadCount() - 1);
+        postService.updateById(post);
+    }
+
+    @RequestMapping("commentDetail")
+    public PostComment commentDetail(@RequestBody CommonId commonId) {
+        return postCommentService.getById(commonId.getId());
+    }
 }

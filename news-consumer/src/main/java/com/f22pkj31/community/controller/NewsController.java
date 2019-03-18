@@ -52,6 +52,9 @@ public class NewsController {
 
     @RequestMapping("sendComment")
     public Object sendComment(@RequestBody NewsComment newsComment) {
+        CommonId commonId = new CommonId();
+        commonId.setId(newsComment.getNewsId());
+        newsClientService.addReadCount(commonId);
         return newsClientService.sendComment(newsComment.setCreateTime(LocalDateTime.now()));
     }
 
@@ -62,6 +65,10 @@ public class NewsController {
 
     @RequestMapping("deleteComment")
     public Object deleteComment(@RequestBody CommonId commonId) {
+        NewsComment newsComment = newsClientService.commentDetail(commonId);
+        CommonId id = new CommonId();
+        commonId.setId(newsComment.getNewsId());
+        newsClientService.subReadCount(id);
         return newsClientService.deleteComment(commonId);
     }
 
@@ -83,6 +90,21 @@ public class NewsController {
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId) {
         return newsClientService.countComment(commonId);
+    }
+
+    @RequestMapping("newsListOrderByRead")
+    public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn){
+        return newsClientService.newsListOrderByRead(pageIn);
+    }
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId){
+        newsClientService.addReadCount(commonId);
+    }
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId){
+        newsClientService.subReadCount(commonId);
     }
 
 }

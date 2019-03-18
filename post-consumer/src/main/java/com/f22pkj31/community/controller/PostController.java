@@ -52,7 +52,11 @@ public class PostController {
 
     @RequestMapping("sendComment")
     public Object sendComment(@RequestBody PostComment postComment) {
-        return postClientService.sendComment(postComment.setCreateTime(LocalDateTime.now()));
+        Object o = postClientService.sendComment(postComment.setCreateTime(LocalDateTime.now()));
+        CommonId commonId = new CommonId();
+        commonId.setId(postComment.getPostId());
+        postClientService.subReadCount(commonId);
+        return o;
     }
 
     @RequestMapping("commentList")
@@ -62,6 +66,9 @@ public class PostController {
 
     @RequestMapping("deleteComment")
     public Object deleteComment(@RequestBody CommonId commonId) {
+        PostComment postComment = postClientService.commentDetail(commonId);
+        CommonId id = new CommonId();
+        commonId.setId(postComment.getPostId());
         return postClientService.deleteComment(commonId);
     }
 
@@ -85,4 +92,19 @@ public class PostController {
         return postClientService.countComment(commonId);
     }
 
+
+    @RequestMapping("postListOrderByRead")
+    public Object postListOrderByRead(@RequestBody PageIn<Post> pageIn) {
+        return postClientService.postListOrderByRead(pageIn);
+    }
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId) {
+        postClientService.addReadCount(commonId);
+    }
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId) {
+        postClientService.subReadCount(commonId);
+    }
 }

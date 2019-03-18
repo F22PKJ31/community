@@ -46,4 +46,16 @@ public interface NewsClientService {
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId);
 
+    @RequestMapping("newsListOrderByRead")
+    public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn);
+
+    @RequestMapping("addReadCount")
+    public void addReadCount(@RequestBody CommonId commonId);
+
+    @RequestMapping("subReadCount")
+    public void subReadCount(@RequestBody CommonId commonId);
+
+
+    @RequestMapping("commentDetail")
+    public NewsComment commentDetail(@RequestBody CommonId commonId);
 }

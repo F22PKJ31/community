@@ -42,6 +42,7 @@ public class News implements Serializable {
     private String categoryName;
 
     private String userName;
+    private String imgUrl;
 
 
 }
