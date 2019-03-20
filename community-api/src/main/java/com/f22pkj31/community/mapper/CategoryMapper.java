@@ -1,7 +1,7 @@
 package com.f22pkj31.community.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.f22pkj31.community.entity.Category;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
@@ -9,7 +9,7 @@ import com.f22pkj31.community.entity.Category;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-16
+ * @since 2019-03-20
  */
 public interface CategoryMapper extends BaseMapper<Category> {
 
