@@ -71,8 +71,8 @@ public class BlogController {
         return blogClientService.deleteComment(id);
     }
 
-    @RequestMapping("sendCollection")
-    public Object sendCollection(@RequestBody BlogCollection blogCollection) {
+    @RequestMapping("saveCollection")
+    public Object saveCollection(@RequestBody BlogCollection blogCollection) {
         return blogClientService.sendCollection(blogCollection.setCreateTime(LocalDateTime.now()));
     }
 

@@ -41,7 +41,7 @@ public class CodeGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        String projectPath = "C:\\Users\\11362\\IdeaProjects2\\community\\community-api";
+        String projectPath = "community-api";
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("f22pkj31");
         gc.setOpen(false);

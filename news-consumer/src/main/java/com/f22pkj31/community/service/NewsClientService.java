@@ -5,6 +5,10 @@ import com.f22pkj31.community.entity.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @FeignClient(value = "news-provider")
 @RequestMapping("/provider/news")
@@ -14,7 +18,7 @@ public interface NewsClientService {
     Object newsList(@RequestBody PageIn<News> pageIn);
 
     @RequestMapping("sendNews")
-    Object sendNews(@RequestBody News news);
+    Object sendNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file);
 
     @RequestMapping("deleteNews")
     Object deleteNews(@RequestBody CommonId commonId);
@@ -23,7 +27,7 @@ public interface NewsClientService {
     News newsDetail(@RequestBody CommonId commonId);
 
     @RequestMapping("updateNews")
-    Object updateNews(@RequestBody News news);
+    Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file);
 
     @RequestMapping("sendComment")
     Object sendComment(@RequestBody NewsComment newsComment);
@@ -58,4 +62,19 @@ public interface NewsClientService {
 
     @RequestMapping("commentDetail")
     public NewsComment commentDetail(@RequestBody CommonId commonId);
+
+    @RequestMapping("sendHeadImg")
+    public Object sendHeadImg(@RequestBody HeadImg headImg, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException;
+
+    @RequestMapping("headImgList")
+    public Object headImgList();
+
+    @RequestMapping("deleteHeadImg")
+    public Object deleteHeadImg(@RequestBody CommonId commonId);
+
+    @RequestMapping("updateHeadImg")
+    public Object updateHeadImg(@RequestBody HeadImg headImg, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException;
+
+    @RequestMapping("saveCollection")
+    public Object sendCollection(@RequestBody NewsCollection newsCollection);
 }

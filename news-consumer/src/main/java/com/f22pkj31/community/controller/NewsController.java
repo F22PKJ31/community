@@ -6,8 +6,11 @@ import com.f22pkj31.community.service.NewsClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -31,8 +34,8 @@ public class NewsController {
     }
 
     @RequestMapping("sendNews")
-    public Object sendNews(@RequestBody News news) {
-        return newsClientService.sendNews(news.setCreateTime(LocalDateTime.now()));
+    public Object sendNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) {
+        return newsClientService.sendNews(news.setCreateTime(LocalDateTime.now()), file);
     }
 
     @RequestMapping("deleteNews")
@@ -46,8 +49,8 @@ public class NewsController {
     }
 
     @RequestMapping("updateNews")
-    public Object updateNews(@RequestBody News news) {
-        return newsClientService.updateNews(news.setCreateTime(LocalDateTime.now()));
+    public Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) {
+        return newsClientService.updateNews(news.setCreateTime(LocalDateTime.now()), file);
     }
 
     @RequestMapping("sendComment")
@@ -93,18 +96,46 @@ public class NewsController {
     }
 
     @RequestMapping("newsListOrderByRead")
-    public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn){
+    public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn) {
         return newsClientService.newsListOrderByRead(pageIn);
     }
 
     @RequestMapping("addReadCount")
-    public void addReadCount(@RequestBody CommonId commonId){
+    public void addReadCount(@RequestBody CommonId commonId) {
         newsClientService.addReadCount(commonId);
     }
 
     @RequestMapping("subReadCount")
-    public void subReadCount(@RequestBody CommonId commonId){
+    public void subReadCount(@RequestBody CommonId commonId) {
         newsClientService.subReadCount(commonId);
     }
+
+    @RequestMapping("sendHeadImg")
+    public Object sendHeadImg(@RequestBody HeadImg headImg, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        return newsClientService.sendHeadImg(headImg, file);
+    }
+
+    @RequestMapping("headImgList")
+    public Object headImgList() {
+        return newsClientService.headImgList();
+    }
+
+    @RequestMapping("deleteHeadImg")
+    public Object deleteHeadImg(@RequestBody CommonId commonId) {
+        return newsClientService.deleteComment(commonId);
+
+    }
+
+    @RequestMapping("updateHeadImg")
+    public Object updateHeadImg(@RequestBody HeadImg headImg,
+                                @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        return newsClientService.updateHeadImg(headImg, file);
+    }
+
+    @RequestMapping("saveCollection")
+    public Object sendCollection(@RequestBody NewsCollection newsCollection) {
+        return newsClientService.sendCollection(newsCollection.setCreateTime(LocalDateTime.now()));
+    }
+
 
 }

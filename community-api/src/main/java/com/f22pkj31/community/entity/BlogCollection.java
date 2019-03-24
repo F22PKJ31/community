@@ -2,12 +2,11 @@ package com.f22pkj31.community.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
+import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-16
+ * @since 2019-03-24
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

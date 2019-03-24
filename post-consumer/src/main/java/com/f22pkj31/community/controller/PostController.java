@@ -107,4 +107,9 @@ public class PostController {
     public void subReadCount(@RequestBody CommonId commonId) {
         postClientService.subReadCount(commonId);
     }
+
+    @RequestMapping("saveCollection")
+    public Object sendCollection(@RequestBody PostCollection postCollection) {
+        return postClientService.sendCollection(postCollection.setCreateTime(LocalDateTime.now()));
+    }
 }

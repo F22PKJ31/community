@@ -9,7 +9,7 @@ import com.f22pkj31.community.entity.NewsComment;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-16
+ * @since 2019-03-24
  */
 public interface INewsCommentService extends IService<NewsComment> {
 

@@ -3,7 +3,6 @@ package com.f22pkj31.community.controller;
 import com.f22pkj31.community.entity.UploadResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +43,8 @@ public class FileController {
         file.transferTo(newFile);
         uploadResp.setError("0");
         uploadResp.setUrl("http://127.0.0.1:8010/" + name);
+
+
         return uploadResp;
     }
 

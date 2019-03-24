@@ -57,4 +57,7 @@ public interface PostClientService {
 
     @RequestMapping("commentDetail")
     public PostComment commentDetail(@RequestBody CommonId commonId);
+
+    @RequestMapping("saveCollection")
+    public Object sendCollection(@RequestBody PostCollection postCollection);
 }

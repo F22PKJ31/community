@@ -5,14 +5,22 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.service.IHeadImgService;
 import com.f22pkj31.community.service.INewsCollectionService;
 import com.f22pkj31.community.service.INewsCommentService;
 import com.f22pkj31.community.service.INewsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * <p>
@@ -24,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/provider/news")
+@Slf4j
 public class NewsController {
 
     @Autowired
@@ -34,6 +43,12 @@ public class NewsController {
 
     @Autowired
     private INewsCollectionService newsCollectionService;
+
+    @Autowired
+    private IHeadImgService headImgService;
+
+    @Value("${resources_path}")
+    private String filePath;
 
     @RequestMapping("newsList")
     public Object newsList(@RequestBody PageIn<News> pageIn) {
@@ -46,7 +61,18 @@ public class NewsController {
     }
 
     @RequestMapping("sendNews")
-    public Object sendNews(@RequestBody News news) {
+    public Object sendNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        if (file != null) {
+            String name = file.getOriginalFilename();
+            if (!new File(filePath + name).exists()) {
+                assert name != null;
+                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
+                log.debug("name={}", name);
+                File newFile = new File(filePath + name);
+                file.transferTo(newFile);
+            }
+            news.setImgUrl("http://127.0.0.1:8010/" + name);
+        }
         return newsService.save(news);
     }
 
@@ -61,7 +87,18 @@ public class NewsController {
     }
 
     @RequestMapping("updateNews")
-    public Object updateNews(@RequestBody News news) {
+    public Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        if (file != null) {
+            String name = file.getOriginalFilename();
+            if (!new File(filePath + name).exists()) {
+                assert name != null;
+                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
+                log.debug("name={}", name);
+                File newFile = new File(filePath + name);
+                file.transferTo(newFile);
+            }
+            news.setImgUrl("http://127.0.0.1:8010/" + name);
+        }
         return newsService.updateById(news);
     }
 
@@ -105,13 +142,18 @@ public class NewsController {
         return newsCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
     }
 
+    @RequestMapping("saveCollection")
+    public Object sendCollection(@RequestBody NewsCollection newsCollection) {
+        return newsCollectionService.save(newsCollection);
+    }
+
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId) {
         return newsCommentService.count(new QueryWrapper<NewsComment>().eq("news_id", commonId.getId()));
     }
 
     @RequestMapping("newsListOrderByRead")
-    public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn){
+    public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn) {
         QueryWrapper<News> queryWrapper = new QueryWrapper<News>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
                 .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
         if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
@@ -137,5 +179,50 @@ public class NewsController {
     @RequestMapping("commentDetail")
     public NewsComment commentDetail(@RequestBody CommonId commonId) {
         return newsCommentService.getById(commonId.getId());
+    }
+
+
+    @RequestMapping("sendHeadImg")
+    public Object sendHeadImg(@RequestBody HeadImg headImg,@RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        if (file != null) {
+            String name = file.getOriginalFilename();
+            if (!new File(filePath + name).exists()) {
+                assert name != null;
+                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
+                log.debug("name={}", name);
+                File newFile = new File(filePath + name);
+                file.transferTo(newFile);
+            }
+            headImg.setImgUrl("http://127.0.0.1:8010/" + name);
+        }
+        return headImgService.save(headImg);
+    }
+
+    @RequestMapping("headImgList")
+    public IPage<HeadImg> headImgList() {
+        IPage<HeadImg> page = headImgService.page(new Page<>(1, 3),
+                new QueryWrapper<HeadImg>());
+        return page;
+    }
+
+    @RequestMapping("deleteHeadImg")
+    public Object deleteHeadImg(@RequestBody CommonId commonId) {
+        return headImgService.removeById(commonId.getId());
+    }
+
+    @RequestMapping("updateHeadImg")
+    public Object updateHeadImg(@RequestBody HeadImg headImg, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        if (file != null) {
+            String name = file.getOriginalFilename();
+            if (!new File(filePath + name).exists()) {
+                assert name != null;
+                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
+                log.debug("name={}", name);
+                File newFile = new File(filePath + name);
+                file.transferTo(newFile);
+            }
+            headImg.setImgUrl("http://127.0.0.1:8010/" + name);
+        }
+        return headImgService.updateById(headImg);
     }
 }

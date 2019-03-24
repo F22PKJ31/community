@@ -103,6 +103,11 @@ public class PostController {
         return postCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
     }
 
+    @RequestMapping("saveCollection")
+    public Object sendCollection(@RequestBody PostCollection postCollection) {
+        return postCollectionService.save(postCollection);
+    }
+
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId) {
         return postCommentService.count(new QueryWrapper<PostComment>().eq("post_id", commonId.getId()));
