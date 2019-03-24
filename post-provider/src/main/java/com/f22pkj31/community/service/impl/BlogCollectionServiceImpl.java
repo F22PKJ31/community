@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-16
+ * @since 2019-03-20
  */
 @Service
 public class BlogCollectionServiceImpl extends ServiceImpl<BlogCollectionMapper, BlogCollection> implements IBlogCollectionService {

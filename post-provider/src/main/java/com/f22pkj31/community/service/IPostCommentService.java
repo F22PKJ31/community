@@ -9,7 +9,7 @@ import com.f22pkj31.community.entity.PostComment;
  * </p>
  *
  * @author f22pkj31
- * @since 2019-03-16
+ * @since 2019-03-20
  */
 public interface IPostCommentService extends IService<PostComment> {
 
