@@ -37,6 +37,7 @@ public class BlogController {
 
     @RequestMapping("deleteBlog")
     public Object deleteBlog(@RequestBody CommonId commonId) {
+        blogClientService.deleteComment(new BlogComment().setBlogId(commonId.getId()));
         return blogClientService.deleteBlog(commonId);
     }
 
@@ -65,10 +66,11 @@ public class BlogController {
 
     @RequestMapping("deleteComment")
     public Object deleteComment(@RequestBody CommonId commonId) {
-        CommonId id = new CommonId();
         BlogComment blogComment = blogClientService.commentDetail(commonId);
+        CommonId id = new CommonId();
         id.setId(blogComment.getBlogId());
-        return blogClientService.deleteComment(id);
+        blogClientService.subReadCount(id);
+        return blogClientService.deleteComment(commonId);
     }
 
     @RequestMapping("saveCollection")

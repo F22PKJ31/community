@@ -40,6 +40,7 @@ public class NewsController {
 
     @RequestMapping("deleteNews")
     public Object deleteNews(@RequestBody CommonId commonId) {
+        newsClientService.deleteComment(new NewsComment().setNewsId(commonId.getId()));
         return newsClientService.deleteNews(commonId);
     }
 
@@ -70,7 +71,7 @@ public class NewsController {
     public Object deleteComment(@RequestBody CommonId commonId) {
         NewsComment newsComment = newsClientService.commentDetail(commonId);
         CommonId id = new CommonId();
-        commonId.setId(newsComment.getNewsId());
+        id.setId(newsComment.getNewsId());
         newsClientService.subReadCount(id);
         return newsClientService.deleteComment(commonId);
     }

@@ -2,6 +2,7 @@ package com.f22pkj31.community.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.f22pkj31.community.entity.*;
@@ -89,6 +90,11 @@ public class BlogController {
     @RequestMapping("deleteComment")
     public Object deleteComment(@RequestBody CommonId commonId) {
         return blogCommentService.removeById(commonId.getId());
+    }
+
+    @RequestMapping("deleteCommentList")
+    public Object deleteComment(@RequestBody BlogComment blogComment) {
+        return blogCommentService.remove(new UpdateWrapper<>(blogComment));
     }
 
     @RequestMapping("sendCollection")

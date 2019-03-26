@@ -37,6 +37,7 @@ public class PostController {
 
     @RequestMapping("deletePost")
     public Object deletePost(@RequestBody CommonId commonId) {
+        postClientService.deleteComment(new PostComment().setPostId(commonId.getId()));
         return postClientService.deletePost(commonId);
     }
 
@@ -68,7 +69,8 @@ public class PostController {
     public Object deleteComment(@RequestBody CommonId commonId) {
         PostComment postComment = postClientService.commentDetail(commonId);
         CommonId id = new CommonId();
-        commonId.setId(postComment.getPostId());
+        id.setId(postComment.getPostId());
+        postClientService.subReadCount(id);
         return postClientService.deleteComment(commonId);
     }
 

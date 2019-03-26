@@ -1,5 +1,6 @@
 package com.f22pkj31.community.service;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.f22pkj31.community.entity.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,9 @@ public interface BlogClientService {
 
     @RequestMapping("deleteBlog")
     Object deleteBlog(@RequestBody CommonId commonId);
+
+    @RequestMapping("deleteCommentList")
+    public Object deleteComment(@RequestBody BlogComment blogComment);
 
     @RequestMapping("blogDetail")
     Blog blogDetail(@RequestBody CommonId commonId);

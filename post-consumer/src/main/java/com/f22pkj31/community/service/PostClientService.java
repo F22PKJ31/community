@@ -1,5 +1,6 @@
 package com.f22pkj31.community.service;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.f22pkj31.community.entity.*;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -60,4 +61,7 @@ public interface PostClientService {
 
     @RequestMapping("saveCollection")
     public Object sendCollection(@RequestBody PostCollection postCollection);
+
+    @RequestMapping("deleteCommentList")
+    public Object deleteComment(@RequestBody PostComment postComment);
 }
