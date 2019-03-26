@@ -74,7 +74,7 @@ public class PostController {
     @RequestMapping("commentList")
     public IPage<PostComment> commentList(@RequestBody PageIn<PostComment> pageIn) {
         if (pageIn.getT().getPostId() != null) {
-            return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
+            return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
         }
         return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<PostComment>()
                 .like("post_title", pageIn.getT().getPostTitle() == null ? "" : pageIn.getT().getPostTitle())

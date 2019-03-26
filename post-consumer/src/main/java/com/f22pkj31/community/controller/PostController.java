@@ -56,7 +56,7 @@ public class PostController {
         Object o = postClientService.sendComment(postComment.setCreateTime(LocalDateTime.now()));
         CommonId commonId = new CommonId();
         commonId.setId(postComment.getPostId());
-        postClientService.subReadCount(commonId);
+        postClientService.addReadCount(commonId);
         return o;
     }
 

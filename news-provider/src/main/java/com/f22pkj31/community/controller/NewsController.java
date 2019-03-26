@@ -112,7 +112,7 @@ public class NewsController {
     public IPage<NewsComment> commentList(@RequestBody PageIn<NewsComment> pageIn) {
         if (pageIn.getT().getNewsId() != null) {
             return newsCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
-                    new QueryWrapper<>(pageIn.getT()));
+                    new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
         }
         return newsCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
                 new QueryWrapper<NewsComment>().like("news_title", pageIn.getT().getNewsTitle() == null ? "" : pageIn.getT().getNewsTitle())
