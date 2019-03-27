@@ -1,7 +1,12 @@
 package com.f22pkj31.community.controller;
 
 
-import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.entity.CommonId;
+import com.f22pkj31.community.entity.HeadImg;
+import com.f22pkj31.community.entity.News;
+import com.f22pkj31.community.entity.NewsCollection;
+import com.f22pkj31.community.entity.NewsComment;
+import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.community.service.NewsClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -112,8 +116,8 @@ public class NewsController {
     }
 
     @RequestMapping("sendHeadImg")
-    public Object sendHeadImg(@RequestBody HeadImg headImg, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        return newsClientService.sendHeadImg(headImg, file);
+    public Object sendHeadImg(@RequestBody HeadImg headImg) {
+        return newsClientService.sendHeadImg(headImg);
     }
 
     @RequestMapping("headImgList")
@@ -125,12 +129,6 @@ public class NewsController {
     public Object deleteHeadImg(@RequestBody CommonId commonId) {
         return newsClientService.deleteComment(commonId);
 
-    }
-
-    @RequestMapping("updateHeadImg")
-    public Object updateHeadImg(@RequestBody HeadImg headImg,
-                                @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        return newsClientService.updateHeadImg(headImg, file);
     }
 
     @RequestMapping("saveCollection")

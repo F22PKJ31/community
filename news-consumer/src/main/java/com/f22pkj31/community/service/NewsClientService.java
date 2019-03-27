@@ -65,7 +65,7 @@ public interface NewsClientService {
     public NewsComment commentDetail(@RequestBody CommonId commonId);
 
     @RequestMapping("sendHeadImg")
-    public Object sendHeadImg(@RequestBody HeadImg headImg, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException;
+    public Object sendHeadImg(@RequestBody HeadImg headImg);
 
     @RequestMapping("headImgList")
     public Object headImgList();

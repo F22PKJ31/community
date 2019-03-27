@@ -34,11 +34,9 @@ public class FileController {
         }
         if (new File(filePath + name).exists()) {
             uploadResp.setError("0");
-            uploadResp.setUrl(name);
+            uploadResp.setUrl("http://127.0.0.1:8010/" + name);
             return uploadResp;
         }
-        name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
-        log.debug("name={}", name);
         File newFile = new File(filePath + name);
         file.transferTo(newFile);
         uploadResp.setError("0");

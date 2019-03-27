@@ -5,7 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.entity.CommonId;
+import com.f22pkj31.community.entity.HeadImg;
+import com.f22pkj31.community.entity.News;
+import com.f22pkj31.community.entity.NewsCollection;
+import com.f22pkj31.community.entity.NewsComment;
+import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.community.service.IHeadImgService;
 import com.f22pkj31.community.service.INewsCollectionService;
 import com.f22pkj31.community.service.INewsCommentService;
@@ -22,6 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -189,26 +198,25 @@ public class NewsController {
 
 
     @RequestMapping("sendHeadImg")
-    public Object sendHeadImg(@RequestBody HeadImg headImg,@RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        if (file != null) {
-            String name = file.getOriginalFilename();
-            if (!new File(filePath + name).exists()) {
-                assert name != null;
-                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
-                log.debug("name={}", name);
-                File newFile = new File(filePath + name);
-                file.transferTo(newFile);
-            }
-            headImg.setImgUrl("http://127.0.0.1:8010/" + name);
-        }
-        return headImgService.save(headImg);
+    public Object sendHeadImg(@RequestBody HeadImg headImg) {
+        return headImgService.saveOrUpdate(headImg);
     }
 
     @RequestMapping("headImgList")
-    public IPage<HeadImg> headImgList() {
-        IPage<HeadImg> page = headImgService.page(new Page<>(1, 3),
-                new QueryWrapper<HeadImg>());
-        return page;
+    public List<Map<String, Object>> headImgList() {
+
+        List<Map<String, Object>> objects = new ArrayList<>();
+        List<HeadImg> list = headImgService.list();
+        for (HeadImg headImg : list) {
+            Map<String, Object> map = new HashMap<>();
+            News news = this.newsDetail(new CommonId().setId(headImg.getNewsId()));
+            map.put("headId", headImg.getHeadId());
+            map.put("imgUrl", headImg.getImgUrl());
+            map.put("newsId", news.getNewsId());
+            map.put("title", news.getTitle());
+            objects.add(map);
+        }
+        return objects;
     }
 
     @RequestMapping("deleteHeadImg")
@@ -216,19 +224,4 @@ public class NewsController {
         return headImgService.removeById(commonId.getId());
     }
 
-    @RequestMapping("updateHeadImg")
-    public Object updateHeadImg(@RequestBody HeadImg headImg, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        if (file != null) {
-            String name = file.getOriginalFilename();
-            if (!new File(filePath + name).exists()) {
-                assert name != null;
-                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
-                log.debug("name={}", name);
-                File newFile = new File(filePath + name);
-                file.transferTo(newFile);
-            }
-            headImg.setImgUrl("http://127.0.0.1:8010/" + name);
-        }
-        return headImgService.updateById(headImg);
-    }
 }
