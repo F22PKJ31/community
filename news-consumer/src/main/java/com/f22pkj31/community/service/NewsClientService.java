@@ -81,4 +81,13 @@ public interface NewsClientService {
 
     @RequestMapping("deleteCommentList")
     public Object deleteComment(@RequestBody NewsComment newsComment);
+
+    @RequestMapping("freshNews")
+    public Object freshNews(@RequestBody News news);
+
+    @RequestMapping("freshComment")
+    public boolean freshComment(@RequestBody NewsComment newsComment);
+
+    @RequestMapping("freshCollection")
+    public Object freshCollection(@RequestBody NewsCollection newsCollection);
 }

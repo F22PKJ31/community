@@ -147,4 +147,34 @@ public class PostController {
     public PostComment commentDetail(@RequestBody CommonId commonId) {
         return postCommentService.getById(commonId.getId());
     }
+
+    @RequestMapping("freshPost")
+    public Object freshPost(@RequestBody Post post) {
+        if (post.getUserId() != null) {
+            postService.update(post, new UpdateWrapper<Post>().eq("userId", post.getUserId()));
+        }
+        return true;
+    }
+
+    @RequestMapping("freshComment")
+    public boolean freshComment(@RequestBody PostComment postComment) {
+        if (postComment.getPostId() != null) {
+            postCommentService.update(postComment, new UpdateWrapper<PostComment>().eq("postId", postComment.getPostId()));
+        }
+        if (postComment.getCommentId() != null) {
+            postCommentService.update(postComment, new UpdateWrapper<PostComment>().eq("userId", postComment.getUserId()));
+        }
+        return true;
+    }
+
+    @RequestMapping("freshCollection")
+    public Object freshCollection(@RequestBody PostCollection postCollection) {
+        if (postCollection.getUserId() != null) {
+            postCollectionService.update(postCollection, new UpdateWrapper<PostCollection>().eq("userId", postCollection.getUserId()));
+        }
+        if (postCollection.getPostId() != null) {
+            postCollectionService.update(postCollection, new UpdateWrapper<PostCollection>().eq("postId", postCollection.getPostId()));
+        }
+        return true;
+    }
 }

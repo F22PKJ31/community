@@ -48,7 +48,10 @@ public class BlogController {
 
     @RequestMapping("updateBlog")
     public Object updateBlog(@RequestBody Blog blog) {
-        return blogClientService.updateBlog(blog.setCreateTime(LocalDateTime.now()));
+        blogClientService.updateBlog(blog.setCreateTime(LocalDateTime.now()));
+        blogClientService.freshComment(new BlogComment().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
+        blogClientService.freshCollection(new BlogCollection().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
+        return true;
     }
 
     @RequestMapping("sendComment")

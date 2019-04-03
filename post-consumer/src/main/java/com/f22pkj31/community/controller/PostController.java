@@ -48,7 +48,10 @@ public class PostController {
 
     @RequestMapping("updatePost")
     public Object updatePost(@RequestBody Post post) {
-        return postClientService.updatePost(post.setCreateTime(LocalDateTime.now()));
+        postClientService.updatePost(post.setCreateTime(LocalDateTime.now()));
+        postClientService.freshComment(new PostComment().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
+        postClientService.freshCollection(new PostCollection().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
+        return true;
     }
 
     @RequestMapping("sendComment")

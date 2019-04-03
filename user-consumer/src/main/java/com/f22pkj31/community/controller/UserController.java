@@ -1,9 +1,10 @@
 package com.f22pkj31.community.controller;
 
 
-import com.f22pkj31.community.entity.CommonId;
-import com.f22pkj31.community.entity.PageIn;
-import com.f22pkj31.community.entity.User;
+import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.service.BlogClientService;
+import com.f22pkj31.community.service.NewsClientService;
+import com.f22pkj31.community.service.PostClientService;
 import com.f22pkj31.community.service.UserClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,15 @@ public class UserController {
     @Autowired
     private UserClientService userClientService;
 
+    @Autowired
+    private BlogClientService blogClientService;
+
+    @Autowired
+    private PostClientService postClientService;
+
+    @Autowired
+    private NewsClientService newsClientService;
+
     @RequestMapping("addUser")
     public boolean addUser(@RequestBody User user) {
         return userClientService.addUser(user.setCreateTime(LocalDateTime.now()));
@@ -34,9 +44,18 @@ public class UserController {
 
     @RequestMapping("updateUser")
     public boolean updateUser(@RequestBody User user) {
-        return userClientService.updateUser(user.setCreateTime(LocalDateTime.now()));
+        blogClientService.freshBlog(new Blog().setUserId(user.getUserId()).setUserName(user.getUserName()));
+        blogClientService.freshCollection(new BlogCollection().setUserId(user.getUserId()).setUserName(user.getUserName()));
+        blogClientService.freshComment(new BlogComment().setUserId(user.getUserId()).setUserName(user.getUserName()));
+        postClientService.freshComment(new PostComment().setUserId(user.getUserId()).setUserName(user.getUserName()));
+        postClientService.freshPost(new Post().setUserId(user.getUserId()).setUserName(user.getUserName()));
+        postClientService.freshCollection(new PostCollection().setUserId(user.getUserId()).setUserName(user.getUserName()));
+        newsClientService.freshCollection(new NewsCollection().setUserId(user.getUserId()).setUserName(user.getUserName()));
+        newsClientService.freshComment(new NewsComment().setUserId(user.getUserId()).setUserName(user.getUserName()));
+        newsClientService.freshNews(new News().setUserId(user.getUserId()).setUserName(user.getUserName()));
+         userClientService.updateUser(user.setCreateTime(LocalDateTime.now()));
+        return true;
     }
-
 
     @RequestMapping("getUser")
     public User getUser(@RequestBody CommonId commonId) {

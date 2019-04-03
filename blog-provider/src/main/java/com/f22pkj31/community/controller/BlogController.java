@@ -40,14 +40,7 @@ public class BlogController {
 
     @RequestMapping("blogList")
     public Object blogList(@RequestBody PageIn<Blog> pageIn) {
-        QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
-                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
-        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
-            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
-        }
-        if (!ObjectUtils.isEmpty(pageIn.getT().getUserId())) {
-            queryWrapper.eq("user_id", pageIn.getT().getUserId());
-        }
+        QueryWrapper<Blog> queryWrapper = getBlogQuery(pageIn);
         return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("create_time"));
 
     }
@@ -72,10 +65,14 @@ public class BlogController {
         return blogService.saveOrUpdate(blog);
     }
 
+
     @RequestMapping("sendComment")
     public Object sendComment(@RequestBody BlogComment blogComment) {
         return blogCommentService.save(blogComment);
     }
+
+
+
 
     @RequestMapping("commentList")
     public IPage<BlogComment> commentList(@RequestBody PageIn<BlogComment> pageIn) {
@@ -120,7 +117,6 @@ public class BlogController {
         return blogCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()));
     }
 
-
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId) {
         return blogCommentService.count(new QueryWrapper<BlogComment>().eq("blog_id", commonId.getId()));
@@ -128,14 +124,7 @@ public class BlogController {
 
     @RequestMapping("blogListOrderByRead")
     public Object blogListOrderByRead(@RequestBody PageIn<Blog> pageIn) {
-        QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
-                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
-        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
-            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
-        }
-        if (!ObjectUtils.isEmpty(pageIn.getT().getUserId())) {
-            queryWrapper.eq("user_id", pageIn.getT().getUserId());
-        }
+        QueryWrapper<Blog> queryWrapper = getBlogQuery(pageIn);
         return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("read_count"));
 
     }
@@ -159,4 +148,48 @@ public class BlogController {
         return blogCommentService.getById(commonId.getId());
     }
 
+    private QueryWrapper<Blog> getBlogQuery(@RequestBody PageIn<Blog> pageIn) {
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
+        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
+            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
+        }
+        if (!ObjectUtils.isEmpty(pageIn.getT().getUserId())) {
+            queryWrapper.eq("user_id", pageIn.getT().getUserId());
+        }
+        return queryWrapper;
+    }
+
+    @RequestMapping("freshBlog")
+    public Object freshBlog(@RequestBody Blog blog) {
+        if (blog.getUserId() != null) {
+            blogService.update(blog, new UpdateWrapper<Blog>().eq("userId", blog.getUserId()));
+        }
+        if (blog.getCategoryId() != null) {
+            blogService.update(blog, new UpdateWrapper<Blog>().eq("categoryId", blog.getCategoryId()));
+        }
+        return true;
+    }
+
+    @RequestMapping("freshComment")
+    public boolean freshComment(@RequestBody BlogComment blogComment) {
+        if (blogComment.getBlogId() != null) {
+            blogCommentService.update(blogComment, new UpdateWrapper<BlogComment>().eq("blogId", blogComment.getBlogId()));
+        }
+        if (blogComment.getCommentId() != null) {
+            blogCommentService.update(blogComment, new UpdateWrapper<BlogComment>().eq("userId", blogComment.getUserId()));
+        }
+        return true;
+    }
+
+    @RequestMapping("freshCollection")
+    public Object freshCollection(@RequestBody BlogCollection blogCollection) {
+        if (blogCollection.getUserId() != null) {
+            blogCollectionService.update(blogCollection, new UpdateWrapper<BlogCollection>().eq("userId", blogCollection.getUserId()));
+        }
+        if (blogCollection.getBlogId() != null) {
+            blogCollectionService.update(blogCollection, new UpdateWrapper<BlogCollection>().eq("blogId", blogCollection.getBlogId()));
+        }
+        return true;
+    }
 }

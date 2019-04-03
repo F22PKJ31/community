@@ -55,7 +55,10 @@ public class NewsController {
 
     @RequestMapping("updateNews")
     public Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) {
-        return newsClientService.updateNews(news.setCreateTime(LocalDateTime.now()), file);
+        newsClientService.updateNews(news.setCreateTime(LocalDateTime.now()), file);
+        newsClientService.freshComment(new NewsComment().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
+        newsClientService.freshCollection(new NewsCollection().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
+        return true;
     }
 
     @RequestMapping("sendComment")
@@ -128,7 +131,6 @@ public class NewsController {
     @RequestMapping("deleteHeadImg")
     public Object deleteHeadImg(@RequestBody CommonId commonId) {
         return newsClientService.deleteComment(commonId);
-
     }
 
     @RequestMapping("saveCollection")

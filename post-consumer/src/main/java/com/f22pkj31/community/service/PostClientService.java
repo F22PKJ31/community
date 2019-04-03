@@ -64,4 +64,13 @@ public interface PostClientService {
 
     @RequestMapping("deleteCommentList")
     public Object deleteComment(@RequestBody PostComment postComment);
+
+    @RequestMapping("freshPost")
+    public Object freshPost(@RequestBody Post post);
+
+    @RequestMapping("freshComment")
+    public boolean freshComment(@RequestBody PostComment postComment);
+
+    @RequestMapping("freshCollection")
+    public Object freshCollection(@RequestBody PostCollection postCollection);
 }

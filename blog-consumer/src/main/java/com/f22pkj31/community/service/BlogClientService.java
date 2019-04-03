@@ -66,4 +66,13 @@ public interface BlogClientService {
 
     @RequestMapping("commentDetail")
     public BlogComment commentDetail(@RequestBody CommonId commonId);
+
+    @RequestMapping("freshBlog")
+    public Object freshBlog(@RequestBody Blog blog);
+
+    @RequestMapping("freshComment")
+    public boolean freshComment(@RequestBody BlogComment blogComment);
+
+    @RequestMapping("freshCollection")
+    public Object freshCollection(@RequestBody BlogCollection blogCollection);
 }

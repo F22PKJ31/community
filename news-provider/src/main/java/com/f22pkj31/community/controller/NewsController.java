@@ -5,12 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.f22pkj31.community.entity.CommonId;
-import com.f22pkj31.community.entity.HeadImg;
-import com.f22pkj31.community.entity.News;
-import com.f22pkj31.community.entity.NewsCollection;
-import com.f22pkj31.community.entity.NewsComment;
-import com.f22pkj31.community.entity.PageIn;
+import com.f22pkj31.community.entity.*;
 import com.f22pkj31.community.service.IHeadImgService;
 import com.f22pkj31.community.service.INewsCollectionService;
 import com.f22pkj31.community.service.INewsCommentService;
@@ -224,4 +219,37 @@ public class NewsController {
         return headImgService.removeById(commonId.getId());
     }
 
+
+    @RequestMapping("freshNews")
+    public Object freshNews(@RequestBody News news) {
+        if (news.getUserId() != null) {
+            newsService.update(news, new UpdateWrapper<News>().eq("userId", news.getUserId()));
+        }
+        if (news.getCategoryId() != null) {
+            newsService.update(news, new UpdateWrapper<News>().eq("categoryId", news.getCategoryId()));
+        }
+        return true;
+    }
+
+    @RequestMapping("freshComment")
+    public boolean freshComment(@RequestBody NewsComment newsComment) {
+        if (newsComment.getNewsId() != null) {
+            newsCommentService.update(newsComment, new UpdateWrapper<NewsComment>().eq("newsId", newsComment.getNewsId()));
+        }
+        if (newsComment.getCommentId() != null) {
+            newsCommentService.update(newsComment, new UpdateWrapper<NewsComment>().eq("userId", newsComment.getUserId()));
+        }
+        return true;
+    }
+
+    @RequestMapping("freshCollection")
+    public Object freshCollection(@RequestBody NewsCollection newsCollection) {
+        if (newsCollection.getUserId() != null) {
+            newsCollectionService.update(newsCollection, new UpdateWrapper<NewsCollection>().eq("userId", newsCollection.getUserId()));
+        }
+        if (newsCollection.getNewsId() != null) {
+            newsCollectionService.update(newsCollection, new UpdateWrapper<NewsCollection>().eq("newsId", newsCollection.getNewsId()));
+        }
+        return true;
+    }
 }

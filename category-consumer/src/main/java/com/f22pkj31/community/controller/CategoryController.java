@@ -1,10 +1,10 @@
 package com.f22pkj31.community.controller;
 
 
-import com.f22pkj31.community.entity.Category;
-import com.f22pkj31.community.entity.CommonId;
-import com.f22pkj31.community.entity.PageIn;
+import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.service.BlogClientService;
 import com.f22pkj31.community.service.CategoryClientService;
+import com.f22pkj31.community.service.NewsClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +27,13 @@ public class CategoryController {
     @Autowired
     private CategoryClientService categoryClientService;
 
+    @Autowired
+    private BlogClientService blogClientService;
+
+    @Autowired
+    private NewsClientService newsClientService;
+
+
     @RequestMapping("addCategory")
     public boolean addCategory(@RequestBody Category category) {
         return categoryClientService.addCategory(category.setCreateTime(LocalDateTime.now()));
@@ -34,7 +41,10 @@ public class CategoryController {
 
     @RequestMapping("updateCategory")
     public boolean updateCategory(@RequestBody Category category) {
-        return categoryClientService.updateCategory(category.setCreateTime(LocalDateTime.now()));
+        categoryClientService.updateCategory(category.setCreateTime(LocalDateTime.now()));
+        newsClientService.freshNews(new News().setCategoryId(category.getCategoryId()).setCategoryName(category.getCategoryName()));
+        blogClientService.freshBlog(new Blog().setCategoryId(category.getCategoryId()).setCategoryName(category.getCategoryName()));
+        return true;
     }
 
     @RequestMapping("getCategory")
