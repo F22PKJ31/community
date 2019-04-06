@@ -3,6 +3,8 @@ package com.f22pkj31.community.controller;
 
 import com.f22pkj31.community.entity.*;
 import com.f22pkj31.community.service.PostClientService;
+import com.f22pkj31.community.service.PostCollectionClientService;
+import com.f22pkj31.community.service.PostCommentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,12 @@ public class PostController {
     @Autowired
     private PostClientService postClientService;
 
+    @Autowired
+    private PostCollectionClientService postCollectionClientService;
+
+    @Autowired
+    private PostCommentClientService postCommentClientService;
+
     @RequestMapping("postList")
     public Object postList(@RequestBody PageIn<Post> pageIn) {
         return postClientService.postList(pageIn);
@@ -37,7 +45,7 @@ public class PostController {
 
     @RequestMapping("deletePost")
     public Object deletePost(@RequestBody CommonId commonId) {
-        postClientService.deleteComment(new PostComment().setPostId(commonId.getId()));
+        postCommentClientService.deleteComment(new PostComment().setPostId(commonId.getId()));
         return postClientService.deletePost(commonId);
     }
 
@@ -49,54 +57,10 @@ public class PostController {
     @RequestMapping("updatePost")
     public Object updatePost(@RequestBody Post post) {
         postClientService.updatePost(post.setCreateTime(LocalDateTime.now()));
-        postClientService.freshComment(new PostComment().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
-        postClientService.freshCollection(new PostCollection().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
+        postCommentClientService.freshComment(new PostComment().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
+        postCollectionClientService.freshCollection(new PostCollection().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
         return true;
     }
-
-    @RequestMapping("sendComment")
-    public Object sendComment(@RequestBody PostComment postComment) {
-        Object o = postClientService.sendComment(postComment.setCreateTime(LocalDateTime.now()));
-        CommonId commonId = new CommonId();
-        commonId.setId(postComment.getPostId());
-        postClientService.addReadCount(commonId);
-        return o;
-    }
-
-    @RequestMapping("commentList")
-    public Object commentList(@RequestBody PageIn<PostComment> pageIn) {
-        return postClientService.commentList(pageIn);
-    }
-
-    @RequestMapping("deleteComment")
-    public Object deleteComment(@RequestBody CommonId commonId) {
-        PostComment postComment = postClientService.commentDetail(commonId);
-        CommonId id = new CommonId();
-        id.setId(postComment.getPostId());
-        postClientService.subReadCount(id);
-        return postClientService.deleteComment(commonId);
-    }
-
-    @RequestMapping("collectionList")
-    public Object collectionList(@RequestBody PageIn<PostCollection> pageIn) {
-        return postClientService.collectionList(pageIn);
-    }
-
-    @RequestMapping("deleteCollection")
-    public Object deleteCollection(@RequestBody CommonId commonId) {
-        return postClientService.deleteCollection(commonId);
-    }
-
-    @RequestMapping("collectionListByUserId")
-    public Object collectionListByUserId(@RequestBody PageIn<PostCollection> pageIn) {
-        return postClientService.collectionListByUserId(pageIn);
-    }
-
-    @RequestMapping("countComment")
-    public int countComment(@RequestBody CommonId commonId) {
-        return postClientService.countComment(commonId);
-    }
-
 
     @RequestMapping("postListOrderByRead")
     public Object postListOrderByRead(@RequestBody PageIn<Post> pageIn) {
@@ -113,8 +77,4 @@ public class PostController {
         postClientService.subReadCount(commonId);
     }
 
-    @RequestMapping("saveCollection")
-    public Object sendCollection(@RequestBody PostCollection postCollection) {
-        return postClientService.sendCollection(postCollection.setCreateTime(LocalDateTime.now()));
-    }
 }

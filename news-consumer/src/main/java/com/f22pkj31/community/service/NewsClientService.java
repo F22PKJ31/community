@@ -1,8 +1,9 @@
 package com.f22pkj31.community.service;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.entity.CommonId;
+import com.f22pkj31.community.entity.HeadImg;
+import com.f22pkj31.community.entity.News;
+import com.f22pkj31.community.entity.PageIn;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,27 +31,6 @@ public interface NewsClientService {
     @RequestMapping("updateNews")
     Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file);
 
-    @RequestMapping("sendComment")
-    Object sendComment(@RequestBody NewsComment newsComment);
-
-    @RequestMapping("commentList")
-    Object commentList(@RequestBody PageIn<NewsComment> pageIn);
-
-    @RequestMapping("deleteComment")
-    Object deleteComment(@RequestBody CommonId commonId);
-
-    @RequestMapping("collectionList")
-    IPage<NewsCollection> collectionList(@RequestBody PageIn<NewsCollection> pageIn);
-
-    @RequestMapping("deleteCollection")
-    Object deleteCollection(@RequestBody CommonId commonId);
-
-    @RequestMapping("collectionListByUserId")
-    Object collectionListByUserId(@RequestBody PageIn<NewsCollection> pageIn);
-
-    @RequestMapping("countComment")
-    public int countComment(@RequestBody CommonId commonId);
-
     @RequestMapping("newsListOrderByRead")
     public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn);
 
@@ -59,10 +39,6 @@ public interface NewsClientService {
 
     @RequestMapping("subReadCount")
     public void subReadCount(@RequestBody CommonId commonId);
-
-
-    @RequestMapping("commentDetail")
-    public NewsComment commentDetail(@RequestBody CommonId commonId);
 
     @RequestMapping("sendHeadImg")
     public Object sendHeadImg(@RequestBody HeadImg headImg);
@@ -76,18 +52,7 @@ public interface NewsClientService {
     @RequestMapping("updateHeadImg")
     public Object updateHeadImg(@RequestBody HeadImg headImg, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException;
 
-    @RequestMapping("saveCollection")
-    public Object sendCollection(@RequestBody NewsCollection newsCollection);
-
-    @RequestMapping("deleteCommentList")
-    public Object deleteComment(@RequestBody NewsComment newsComment);
-
     @RequestMapping("freshNews")
     public Object freshNews(@RequestBody News news);
 
-    @RequestMapping("freshComment")
-    public boolean freshComment(@RequestBody NewsComment newsComment);
-
-    @RequestMapping("freshCollection")
-    public Object freshCollection(@RequestBody NewsCollection newsCollection);
 }

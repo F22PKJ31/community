@@ -3,12 +3,12 @@ package com.f22pkj31.community.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.entity.CommonId;
+import com.f22pkj31.community.entity.HeadImg;
+import com.f22pkj31.community.entity.News;
+import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.community.service.IHeadImgService;
-import com.f22pkj31.community.service.INewsCollectionService;
-import com.f22pkj31.community.service.INewsCommentService;
 import com.f22pkj31.community.service.INewsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +44,6 @@ public class NewsController {
     private INewsService newsService;
 
     @Autowired
-    private INewsCommentService newsCommentService;
-
-    @Autowired
-    private INewsCollectionService newsCollectionService;
-
-    @Autowired
     private IHeadImgService headImgService;
 
     @Value("${resources_path}")
@@ -57,29 +51,16 @@ public class NewsController {
 
     @RequestMapping("newsList")
     public Object newsList(@RequestBody PageIn<News> pageIn) {
-        QueryWrapper<News> queryWrapper = new QueryWrapper<News>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
-                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
-        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
-            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
-        }
+        QueryWrapper<News> queryWrapper = getNewsQueryWrapper(pageIn);
         return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("create_time"));
     }
 
     @RequestMapping("sendNews")
     public Object sendNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        if (file != null) {
-            String name = file.getOriginalFilename();
-            if (!new File(filePath + name).exists()) {
-                assert name != null;
-                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
-                log.debug("name={}", name);
-                File newFile = new File(filePath + name);
-                file.transferTo(newFile);
-            }
-            news.setImgUrl("http://127.0.0.1:8010/" + name);
-        }
+        upLoadFile(news, file);
         return newsService.save(news);
     }
+
 
     @RequestMapping("deleteNews")
     public Object deleteNews(@RequestBody CommonId commonId) {
@@ -93,82 +74,13 @@ public class NewsController {
 
     @RequestMapping("updateNews")
     public Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        if (file != null) {
-            String name = file.getOriginalFilename();
-            if (!new File(filePath + name).exists()) {
-                assert name != null;
-                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
-                log.debug("name={}", name);
-                File newFile = new File(filePath + name);
-                file.transferTo(newFile);
-            }
-            news.setImgUrl("http://127.0.0.1:8010/" + name);
-        }
+        upLoadFile(news, file);
         return newsService.updateById(news);
-    }
-
-    @RequestMapping("sendComment")
-    public Object sendComment(@RequestBody NewsComment newsComment) {
-        return newsCommentService.save(newsComment);
-    }
-
-    @RequestMapping("commentList")
-    public IPage<NewsComment> commentList(@RequestBody PageIn<NewsComment> pageIn) {
-        if (pageIn.getT().getNewsId() != null) {
-            return newsCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
-                    new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
-        }
-        return newsCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
-                new QueryWrapper<NewsComment>().like("news_title", pageIn.getT().getNewsTitle() == null ? "" : pageIn.getT().getNewsTitle())
-                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName())
-                        .orderByDesc("create_time"));
-    }
-
-    @RequestMapping("deleteComment")
-    public Object deleteComment(@RequestBody CommonId commonId) {
-        return newsCommentService.removeById(commonId.getId());
-    }
-
-    @RequestMapping("deleteCommentList")
-    public Object deleteComment(@RequestBody NewsComment newsComment) {
-        return newsCommentService.remove(new UpdateWrapper<>(newsComment));
-    }
-
-    @RequestMapping("collectionList")
-    public IPage<NewsCollection> collectionList(@RequestBody PageIn<NewsCollection> pageIn) {
-        return newsCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
-                new QueryWrapper<NewsCollection>().like("news_title", pageIn.getT().getNewsTitle() == null ? "" : pageIn.getT().getNewsTitle())
-                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName())
-                        .orderByDesc("create_time"));
-    }
-
-    @RequestMapping("deleteCollection")
-    public Object deleteCollection(@RequestBody CommonId commonId) {
-        return newsCollectionService.removeById(commonId.getId());
-    }
-
-    @RequestMapping("collectionListByUserId")
-    public Object collectionListByUserId(@RequestBody PageIn<NewsCollection> pageIn) {
-        return newsCollectionService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
-    }
-
-    @RequestMapping("saveCollection")
-    public Object sendCollection(@RequestBody NewsCollection newsCollection) {
-        return newsCollectionService.save(newsCollection);
-    }
-
-    @RequestMapping("countComment")
-    public int countComment(@RequestBody CommonId commonId) {
-        return newsCommentService.count(new QueryWrapper<NewsComment>().eq("news_id", commonId.getId()));
     }
 
     @RequestMapping("newsListOrderByRead")
     public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn) {
-        QueryWrapper<News> queryWrapper = new QueryWrapper<News>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
-                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
-        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
-            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
-        }
+        QueryWrapper<News> queryWrapper = getNewsQueryWrapper(pageIn);
         return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("read_count"));
     }
 
@@ -184,11 +96,6 @@ public class NewsController {
         News news = newsService.getById(commonId.getId());
         news.setReadCount(news.getReadCount() - 1);
         newsService.updateById(news);
-    }
-
-    @RequestMapping("commentDetail")
-    public NewsComment commentDetail(@RequestBody CommonId commonId) {
-        return newsCommentService.getById(commonId.getId());
     }
 
 
@@ -231,25 +138,26 @@ public class NewsController {
         return true;
     }
 
-    @RequestMapping("freshComment")
-    public boolean freshComment(@RequestBody NewsComment newsComment) {
-        if (newsComment.getNewsId() != null) {
-            newsCommentService.update(newsComment, new UpdateWrapper<NewsComment>().eq("newsId", newsComment.getNewsId()));
+    private QueryWrapper<News> getNewsQueryWrapper(@RequestBody PageIn<News> pageIn) {
+        QueryWrapper<News> queryWrapper = new QueryWrapper<News>().like("title", pageIn.getT().getTitle() == null ? "" : pageIn.getT().getTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName());
+        if (!ObjectUtils.isEmpty(pageIn.getT().getCategoryId())) {
+            queryWrapper.eq("category_id", pageIn.getT().getCategoryId());
         }
-        if (newsComment.getCommentId() != null) {
-            newsCommentService.update(newsComment, new UpdateWrapper<NewsComment>().eq("userId", newsComment.getUserId()));
-        }
-        return true;
+        return queryWrapper;
     }
 
-    @RequestMapping("freshCollection")
-    public Object freshCollection(@RequestBody NewsCollection newsCollection) {
-        if (newsCollection.getUserId() != null) {
-            newsCollectionService.update(newsCollection, new UpdateWrapper<NewsCollection>().eq("userId", newsCollection.getUserId()));
+    private void upLoadFile(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        if (file != null) {
+            String name = file.getOriginalFilename();
+            if (!new File(filePath + name).exists()) {
+                assert name != null;
+                name = System.currentTimeMillis() + name.substring(name.lastIndexOf("."));
+                log.debug("name={}", name);
+                File newFile = new File(filePath + name);
+                file.transferTo(newFile);
+            }
+            news.setImgUrl("http://127.0.0.1:8010/" + name);
         }
-        if (newsCollection.getNewsId() != null) {
-            newsCollectionService.update(newsCollection, new UpdateWrapper<NewsCollection>().eq("newsId", newsCollection.getNewsId()));
-        }
-        return true;
     }
 }

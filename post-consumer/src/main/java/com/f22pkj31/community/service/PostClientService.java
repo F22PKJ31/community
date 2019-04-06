@@ -1,8 +1,8 @@
 package com.f22pkj31.community.service;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.entity.CommonId;
+import com.f22pkj31.community.entity.PageIn;
+import com.f22pkj31.community.entity.Post;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,27 +26,6 @@ public interface PostClientService {
     @RequestMapping("updatePost")
     Object updatePost(@RequestBody Post post);
 
-    @RequestMapping("sendComment")
-    Object sendComment(@RequestBody PostComment postComment);
-
-    @RequestMapping("commentList")
-    Object commentList(@RequestBody PageIn<PostComment> pageIn);
-
-    @RequestMapping("deleteComment")
-    Object deleteComment(@RequestBody CommonId commonId);
-
-    @RequestMapping("collectionList")
-    IPage<PostCollection> collectionList(@RequestBody PageIn<PostCollection> pageIn);
-
-    @RequestMapping("deleteCollection")
-    Object deleteCollection(@RequestBody CommonId commonId);
-
-    @RequestMapping("collectionListByUserId")
-    Object collectionListByUserId(@RequestBody PageIn<PostCollection> pageIn);
-
-    @RequestMapping("countComment")
-    public int countComment(@RequestBody CommonId commonId);
-
     @RequestMapping("postListOrderByRead")
     public Object postListOrderByRead(@RequestBody PageIn<Post> pageIn);
 
@@ -56,21 +35,8 @@ public interface PostClientService {
     @RequestMapping("subReadCount")
     public void subReadCount(@RequestBody CommonId commonId);
 
-    @RequestMapping("commentDetail")
-    public PostComment commentDetail(@RequestBody CommonId commonId);
-
-    @RequestMapping("saveCollection")
-    public Object sendCollection(@RequestBody PostCollection postCollection);
-
-    @RequestMapping("deleteCommentList")
-    public Object deleteComment(@RequestBody PostComment postComment);
-
     @RequestMapping("freshPost")
     public Object freshPost(@RequestBody Post post);
 
-    @RequestMapping("freshComment")
-    public boolean freshComment(@RequestBody PostComment postComment);
 
-    @RequestMapping("freshCollection")
-    public Object freshCollection(@RequestBody PostCollection postCollection);
 }

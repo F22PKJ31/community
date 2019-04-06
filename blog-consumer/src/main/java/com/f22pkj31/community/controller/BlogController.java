@@ -3,6 +3,8 @@ package com.f22pkj31.community.controller;
 
 import com.f22pkj31.community.entity.*;
 import com.f22pkj31.community.service.BlogClientService;
+import com.f22pkj31.community.service.BlogCollectionClientService;
+import com.f22pkj31.community.service.BlogCommentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,12 @@ public class BlogController {
     @Autowired
     private BlogClientService blogClientService;
 
+    @Autowired
+    private BlogCommentClientService blogCommentClientService;
+
+    @Autowired
+    private BlogCollectionClientService blogCollectionClientService;
+
     @RequestMapping("blogList")
     public Object blogList(@RequestBody PageIn<Blog> pageIn) {
         return blogClientService.blogList(pageIn);
@@ -37,7 +45,7 @@ public class BlogController {
 
     @RequestMapping("deleteBlog")
     public Object deleteBlog(@RequestBody CommonId commonId) {
-        blogClientService.deleteComment(new BlogComment().setBlogId(commonId.getId()));
+        blogCommentClientService.deleteComment(new BlogComment().setBlogId(commonId.getId()));
         return blogClientService.deleteBlog(commonId);
     }
 
@@ -49,56 +57,9 @@ public class BlogController {
     @RequestMapping("updateBlog")
     public Object updateBlog(@RequestBody Blog blog) {
         blogClientService.updateBlog(blog.setCreateTime(LocalDateTime.now()));
-        blogClientService.freshComment(new BlogComment().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
-        blogClientService.freshCollection(new BlogCollection().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
+        blogCommentClientService.freshComment(new BlogComment().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
+        blogCollectionClientService.freshCollection(new BlogCollection().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
         return true;
-    }
-
-    @RequestMapping("sendComment")
-    public Object sendComment(@RequestBody BlogComment blogComment) {
-        CommonId commonId = new CommonId();
-        commonId.setId(blogComment.getBlogId());
-        blogClientService.addReadCount(commonId);
-        return blogClientService.sendComment(blogComment.setCreateTime(LocalDateTime.now()));
-    }
-
-    @RequestMapping("commentList")
-    public Object commentList(@RequestBody PageIn<BlogComment> pageIn) {
-        return blogClientService.commentList(pageIn);
-    }
-
-    @RequestMapping("deleteComment")
-    public Object deleteComment(@RequestBody CommonId commonId) {
-        BlogComment blogComment = blogClientService.commentDetail(commonId);
-        CommonId id = new CommonId();
-        id.setId(blogComment.getBlogId());
-        blogClientService.subReadCount(id);
-        return blogClientService.deleteComment(commonId);
-    }
-
-    @RequestMapping("saveCollection")
-    public Object saveCollection(@RequestBody BlogCollection blogCollection) {
-        return blogClientService.sendCollection(blogCollection.setCreateTime(LocalDateTime.now()));
-    }
-
-    @RequestMapping("collectionList")
-    public Object collectionList(@RequestBody PageIn<BlogCollection> pageIn) {
-        return blogClientService.collectionList(pageIn);
-    }
-
-    @RequestMapping("deleteCollection")
-    public Object deleteCollection(@RequestBody CommonId commonId) {
-        return blogClientService.deleteCollection(commonId);
-    }
-
-    @RequestMapping("collectionListByUserId")
-    public Object collectionListByUserId(@RequestBody PageIn<BlogCollection> pageIn) {
-        return blogClientService.collectionListByUserId(pageIn);
-    }
-
-    @RequestMapping("countComment")
-    public int countComment(@RequestBody CommonId commonId) {
-        return blogClientService.countComment(commonId);
     }
 
     @RequestMapping("blogListOrderByRead")

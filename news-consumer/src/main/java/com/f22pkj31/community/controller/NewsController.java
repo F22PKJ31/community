@@ -1,13 +1,10 @@
 package com.f22pkj31.community.controller;
 
 
-import com.f22pkj31.community.entity.CommonId;
-import com.f22pkj31.community.entity.HeadImg;
-import com.f22pkj31.community.entity.News;
-import com.f22pkj31.community.entity.NewsCollection;
-import com.f22pkj31.community.entity.NewsComment;
-import com.f22pkj31.community.entity.PageIn;
+import com.f22pkj31.community.entity.*;
 import com.f22pkj31.community.service.NewsClientService;
+import com.f22pkj31.community.service.NewsCollectionClientService;
+import com.f22pkj31.community.service.NewsCommentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +29,12 @@ public class NewsController {
     @Autowired
     private NewsClientService newsClientService;
 
+    @Autowired
+    private NewsCommentClientService newsCommentClientService;
+
+    @Autowired
+    private NewsCollectionClientService newsCollectionClientService;
+
     @RequestMapping("newsList")
     public Object newsList(@RequestBody PageIn<News> pageIn) {
         return newsClientService.newsList(pageIn);
@@ -44,7 +47,7 @@ public class NewsController {
 
     @RequestMapping("deleteNews")
     public Object deleteNews(@RequestBody CommonId commonId) {
-        newsClientService.deleteComment(new NewsComment().setNewsId(commonId.getId()));
+        newsCommentClientService.deleteComment(new NewsComment().setNewsId(commonId.getId()));
         return newsClientService.deleteNews(commonId);
     }
 
@@ -56,51 +59,9 @@ public class NewsController {
     @RequestMapping("updateNews")
     public Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) {
         newsClientService.updateNews(news.setCreateTime(LocalDateTime.now()), file);
-        newsClientService.freshComment(new NewsComment().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
-        newsClientService.freshCollection(new NewsCollection().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
+        newsCommentClientService.freshComment(new NewsComment().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
+        newsCollectionClientService.freshCollection(new NewsCollection().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
         return true;
-    }
-
-    @RequestMapping("sendComment")
-    public Object sendComment(@RequestBody NewsComment newsComment) {
-        CommonId commonId = new CommonId();
-        commonId.setId(newsComment.getNewsId());
-        newsClientService.addReadCount(commonId);
-        return newsClientService.sendComment(newsComment.setCreateTime(LocalDateTime.now()));
-    }
-
-    @RequestMapping("commentList")
-    public Object commentList(@RequestBody PageIn<NewsComment> pageIn) {
-        return newsClientService.commentList(pageIn);
-    }
-
-    @RequestMapping("deleteComment")
-    public Object deleteComment(@RequestBody CommonId commonId) {
-        NewsComment newsComment = newsClientService.commentDetail(commonId);
-        CommonId id = new CommonId();
-        id.setId(newsComment.getNewsId());
-        newsClientService.subReadCount(id);
-        return newsClientService.deleteComment(commonId);
-    }
-
-    @RequestMapping("collectionList")
-    public Object collectionList(@RequestBody PageIn<NewsCollection> pageIn) {
-        return newsClientService.collectionList(pageIn);
-    }
-
-    @RequestMapping("deleteCollection")
-    public Object deleteCollection(@RequestBody CommonId commonId) {
-        return newsClientService.deleteCollection(commonId);
-    }
-
-    @RequestMapping("collectionListByUserId")
-    public Object collectionListByUserId(@RequestBody PageIn<NewsCollection> pageIn) {
-        return newsClientService.collectionListByUserId(pageIn);
-    }
-
-    @RequestMapping("countComment")
-    public int countComment(@RequestBody CommonId commonId) {
-        return newsClientService.countComment(commonId);
     }
 
     @RequestMapping("newsListOrderByRead")
@@ -127,16 +88,5 @@ public class NewsController {
     public Object headImgList() {
         return newsClientService.headImgList();
     }
-
-    @RequestMapping("deleteHeadImg")
-    public Object deleteHeadImg(@RequestBody CommonId commonId) {
-        return newsClientService.deleteComment(commonId);
-    }
-
-    @RequestMapping("saveCollection")
-    public Object sendCollection(@RequestBody NewsCollection newsCollection) {
-        return newsClientService.sendCollection(newsCollection.setCreateTime(LocalDateTime.now()));
-    }
-
 
 }
