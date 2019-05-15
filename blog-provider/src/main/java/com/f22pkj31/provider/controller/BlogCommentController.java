@@ -33,9 +33,13 @@ public class BlogCommentController {
         if (pageIn.getT().getBlogId() != null) {
             return blogCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
         }
+        QueryWrapper<BlogComment> queryWrapper = new QueryWrapper<BlogComment>().like("blog_title", pageIn.getT().getBlogTitle() == null ? "" : pageIn.getT().getBlogTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()).orderByDesc("create_time");
+        if (pageIn.getT().getUserId() != null) {
+            queryWrapper.eq("user_id", pageIn.getT().getUserId());
+        }
         return blogCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
-                new QueryWrapper<BlogComment>().like("blog_title", pageIn.getT().getBlogTitle() == null ? "" : pageIn.getT().getBlogTitle())
-                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName()).orderByDesc("create_time"));
+                queryWrapper);
     }
 
     @RequestMapping("deleteComment")
@@ -61,10 +65,10 @@ public class BlogCommentController {
     @RequestMapping("freshComment")
     public boolean freshComment(@RequestBody BlogComment blogComment) {
         if (blogComment.getBlogId() != null) {
-            blogCommentService.update(blogComment, new UpdateWrapper<BlogComment>().eq("blogId", blogComment.getBlogId()));
+            blogCommentService.update(blogComment, new UpdateWrapper<BlogComment>().eq("blog_id", blogComment.getBlogId()));
         }
         if (blogComment.getCommentId() != null) {
-            blogCommentService.update(blogComment, new UpdateWrapper<BlogComment>().eq("userId", blogComment.getUserId()));
+            blogCommentService.update(blogComment, new UpdateWrapper<BlogComment>().eq("user_id", blogComment.getUserId()));
         }
         return true;
     }

@@ -4,7 +4,6 @@ import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.community.entity.PostComment;
 import com.f22pkj31.consumer.service.PostClientService;
-import com.f22pkj31.consumer.service.PostCommentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +18,9 @@ public class PostCommentController {
     @Autowired
     private PostClientService postClientService;
 
-    @Autowired
-    private PostCommentClientService postCommentClientService;
-
     @RequestMapping("sendComment")
     public Object sendComment(@RequestBody PostComment postComment) {
-        Object o = postCommentClientService.sendComment(postComment.setCreateTime(LocalDateTime.now()));
+        Object o = postClientService.sendComment(postComment.setCreateTime(LocalDateTime.now()));
         CommonId commonId = new CommonId();
         commonId.setId(postComment.getPostId());
         postClientService.addReadCount(commonId);
@@ -33,21 +29,21 @@ public class PostCommentController {
 
     @RequestMapping("commentList")
     public Object commentList(@RequestBody PageIn<PostComment> pageIn) {
-        return postCommentClientService.commentList(pageIn);
+        return postClientService.commentList(pageIn);
     }
 
     @RequestMapping("deleteComment")
     public Object deleteComment(@RequestBody CommonId commonId) {
-        PostComment postComment = postCommentClientService.commentDetail(commonId);
+        PostComment postComment = postClientService.commentDetail(commonId);
         CommonId id = new CommonId();
         id.setId(postComment.getPostId());
         postClientService.subReadCount(id);
-        return postCommentClientService.deleteComment(commonId);
+        return postClientService.deleteComment(commonId);
     }
 
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId) {
-        return postCommentClientService.countComment(commonId);
+        return postClientService.countComment(commonId);
     }
 
 }

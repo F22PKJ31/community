@@ -25,10 +25,14 @@ public class PostCommentController {
         if (pageIn.getT().getPostId() != null) {
             return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
         }
-        return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), new QueryWrapper<PostComment>()
+        QueryWrapper<PostComment> queryWrapper = new QueryWrapper<PostComment>()
                 .like("post_title", pageIn.getT().getPostTitle() == null ? "" : pageIn.getT().getPostTitle())
                 .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName())
-                .orderByDesc("create_time"));
+                .orderByDesc("create_time");
+        if (pageIn.getT().getUserId() != null) {
+            queryWrapper.eq("user_id", pageIn.getT().getUserId());
+        }
+        return postCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper);
     }
 
     @RequestMapping("deleteComment")
@@ -59,10 +63,10 @@ public class PostCommentController {
     @RequestMapping("freshComment")
     public boolean freshComment(@RequestBody PostComment postComment) {
         if (postComment.getPostId() != null) {
-            postCommentService.update(postComment, new UpdateWrapper<PostComment>().eq("postId", postComment.getPostId()));
+            postCommentService.update(postComment, new UpdateWrapper<PostComment>().eq("post_id", postComment.getPostId()));
         }
         if (postComment.getCommentId() != null) {
-            postCommentService.update(postComment, new UpdateWrapper<PostComment>().eq("userId", postComment.getUserId()));
+            postCommentService.update(postComment, new UpdateWrapper<PostComment>().eq("user_id", postComment.getUserId()));
         }
         return true;
     }

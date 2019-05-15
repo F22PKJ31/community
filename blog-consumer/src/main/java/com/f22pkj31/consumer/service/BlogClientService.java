@@ -1,8 +1,6 @@
 package com.f22pkj31.consumer.service;
 
-import com.f22pkj31.community.entity.Blog;
-import com.f22pkj31.community.entity.CommonId;
-import com.f22pkj31.community.entity.PageIn;
+import com.f22pkj31.community.entity.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +11,9 @@ public interface BlogClientService {
 
     @RequestMapping("blogList")
     Object blogList(@RequestBody PageIn<Blog> pageIn);
+
+    @RequestMapping("allBlogList")
+    Object allBlogList(@RequestBody PageIn<Blog> pageIn);
 
     @RequestMapping("sendBlog")
     Object sendBlog(@RequestBody Blog blog);
@@ -27,15 +28,55 @@ public interface BlogClientService {
     Object updateBlog(@RequestBody Blog blog);
 
     @RequestMapping("blogListOrderByRead")
-    public Object blogListOrderByRead(@RequestBody PageIn<Blog> pageIn);
+    Object blogListOrderByRead(@RequestBody PageIn<Blog> pageIn);
 
     @RequestMapping("addReadCount")
-    public void addReadCount(@RequestBody CommonId commonId);
+    void addReadCount(@RequestBody CommonId commonId);
 
     @RequestMapping("subReadCount")
-    public void subReadCount(@RequestBody CommonId commonId);
+    void subReadCount(@RequestBody CommonId commonId);
 
     @RequestMapping("freshBlog")
-    public Object freshBlog(@RequestBody Blog blog);
+    Object freshBlog(@RequestBody Blog blog);
+
+    @RequestMapping("deleteCollect")
+    boolean deleteCollect(@RequestBody CommonId commonId);
+
+    @RequestMapping("sendCollection")
+    Object sendCollection(@RequestBody BlogCollection blogCollection);
+
+    @RequestMapping("collectionList")
+    Object collectionList(@RequestBody PageIn<BlogCollection> pageIn);
+
+    @RequestMapping("deleteCollection")
+    Object deleteCollection(@RequestBody CommonId commonId);
+
+    @RequestMapping("collectionListByUserId")
+    Object collectionListByUserId(@RequestBody PageIn<BlogCollection> pageIn);
+
+    @RequestMapping("freshCollection")
+    Object freshCollection(@RequestBody BlogCollection blogCollection);
+
+    @RequestMapping("sendComment")
+    Object sendComment(@RequestBody BlogComment blogComment);
+
+    @RequestMapping("commentList")
+    Object commentList(@RequestBody PageIn<BlogComment> pageIn);
+
+    @RequestMapping("deleteComment")
+    Object deleteComment(@RequestBody CommonId commonId);
+
+    @RequestMapping("countComment")
+    int countComment(@RequestBody CommonId commonId);
+
+    @RequestMapping("freshComment")
+    boolean freshComment(@RequestBody BlogComment blogComment);
+
+    @RequestMapping("commentDetail")
+    BlogComment commentDetail(@RequestBody CommonId commonId);
+
+    @RequestMapping("deleteCommentList")
+    Object deleteComment(@RequestBody BlogComment blogComment);
+
 
 }

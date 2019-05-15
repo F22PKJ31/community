@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,7 +53,16 @@ public class NewsController {
     @RequestMapping("newsList")
     public Object newsList(@RequestBody PageIn<News> pageIn) {
         QueryWrapper<News> queryWrapper = getNewsQueryWrapper(pageIn);
-        return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("create_time"));
+        return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.eq("state", 1).orderByDesc("create_time"));
+    }
+
+    @RequestMapping("allNewsList")
+    public Object allNewsList(@RequestBody PageIn<News> pageIn) {
+        QueryWrapper<News> queryWrapper = getNewsQueryWrapper(pageIn);
+        if (!StringUtils.isEmpty(pageIn.getT().getState())) {
+            queryWrapper.eq("state", pageIn.getT().getState());
+        }
+        return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("state", "create_time"));
     }
 
     @RequestMapping("sendNews")
@@ -81,7 +91,8 @@ public class NewsController {
     @RequestMapping("newsListOrderByRead")
     public Object newsListOrderByRead(@RequestBody PageIn<News> pageIn) {
         QueryWrapper<News> queryWrapper = getNewsQueryWrapper(pageIn);
-        return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("read_count"));
+        return newsService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
+                queryWrapper.eq("state", 1).orderByDesc("read_count"));
     }
 
     @RequestMapping("addReadCount")
@@ -130,10 +141,10 @@ public class NewsController {
     @RequestMapping("freshNews")
     public Object freshNews(@RequestBody News news) {
         if (news.getUserId() != null) {
-            newsService.update(news, new UpdateWrapper<News>().eq("userId", news.getUserId()));
+            newsService.update(news, new UpdateWrapper<News>().eq("user_id", news.getUserId()));
         }
         if (news.getCategoryId() != null) {
-            newsService.update(news, new UpdateWrapper<News>().eq("categoryId", news.getCategoryId()));
+            newsService.update(news, new UpdateWrapper<News>().eq("category_id", news.getCategoryId()));
         }
         return true;
     }

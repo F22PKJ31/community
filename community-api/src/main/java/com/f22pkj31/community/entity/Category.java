@@ -2,11 +2,11 @@ package com.f22pkj31.community.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -27,8 +27,5 @@ public class Category implements Serializable {
     private Integer categoryId;
 
     private String categoryName;
-
-    private LocalDateTime createTime;
-
 
 }

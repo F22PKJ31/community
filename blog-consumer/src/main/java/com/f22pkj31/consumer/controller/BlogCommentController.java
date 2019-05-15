@@ -4,7 +4,6 @@ import com.f22pkj31.community.entity.BlogComment;
 import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.consumer.service.BlogClientService;
-import com.f22pkj31.consumer.service.BlogCommentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,33 +18,30 @@ public class BlogCommentController {
     @Autowired
     private BlogClientService blogClientService;
 
-    @Autowired
-    private BlogCommentClientService blogCommentClientService;
-
     @RequestMapping("sendComment")
     public Object sendComment(@RequestBody BlogComment blogComment) {
         CommonId commonId = new CommonId();
         commonId.setId(blogComment.getBlogId());
         blogClientService.addReadCount(commonId);
-        return blogCommentClientService.sendComment(blogComment.setCreateTime(LocalDateTime.now()));
+        return blogClientService.sendComment(blogComment.setCreateTime(LocalDateTime.now()));
     }
 
     @RequestMapping("commentList")
     public Object commentList(@RequestBody PageIn<BlogComment> pageIn) {
-        return blogCommentClientService.commentList(pageIn);
+        return blogClientService.commentList(pageIn);
     }
 
     @RequestMapping("deleteComment")
     public Object deleteComment(@RequestBody CommonId commonId) {
-        BlogComment blogComment = blogCommentClientService.commentDetail(commonId);
+        BlogComment blogComment = blogClientService.commentDetail(commonId);
         CommonId id = new CommonId();
         id.setId(blogComment.getBlogId());
         blogClientService.subReadCount(id);
-        return blogCommentClientService.deleteComment(commonId);
+        return blogClientService.deleteComment(commonId);
     }
 
     @RequestMapping("countComment")
     public int countComment(@RequestBody CommonId commonId) {
-        return blogCommentClientService.countComment(commonId);
+        return blogClientService.countComment(commonId);
     }
 }

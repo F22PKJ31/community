@@ -3,8 +3,6 @@ package com.f22pkj31.consumer.controller;
 
 import com.f22pkj31.community.entity.*;
 import com.f22pkj31.consumer.service.PostClientService;
-import com.f22pkj31.consumer.service.PostCollectionClientService;
-import com.f22pkj31.consumer.service.PostCommentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,15 +25,13 @@ public class PostController {
     @Autowired
     private PostClientService postClientService;
 
-    @Autowired
-    private PostCollectionClientService postCollectionClientService;
-
-    @Autowired
-    private PostCommentClientService postCommentClientService;
-
     @RequestMapping("postList")
     public Object postList(@RequestBody PageIn<Post> pageIn) {
         return postClientService.postList(pageIn);
+    }
+    @RequestMapping("allPostList")
+    public Object allPostList(@RequestBody PageIn<Post> pageIn) {
+        return postClientService.allPostList(pageIn);
     }
 
     @RequestMapping("sendPost")
@@ -45,7 +41,7 @@ public class PostController {
 
     @RequestMapping("deletePost")
     public Object deletePost(@RequestBody CommonId commonId) {
-        postCommentClientService.deleteComment(new PostComment().setPostId(commonId.getId()));
+        postClientService.deleteComment(new PostComment().setPostId(commonId.getId()));
         return postClientService.deletePost(commonId);
     }
 
@@ -57,8 +53,8 @@ public class PostController {
     @RequestMapping("updatePost")
     public Object updatePost(@RequestBody Post post) {
         postClientService.updatePost(post.setCreateTime(LocalDateTime.now()));
-        postCommentClientService.freshComment(new PostComment().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
-        postCollectionClientService.freshCollection(new PostCollection().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
+        postClientService.freshComment(new PostComment().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
+        postClientService.freshCollection(new PostCollection().setPostId(post.getPostId()).setPostTitle(post.getTitle()));
         return true;
     }
 

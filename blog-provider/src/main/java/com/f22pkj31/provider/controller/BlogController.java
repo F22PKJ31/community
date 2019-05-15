@@ -10,6 +10,7 @@ import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.provider.service.IBlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,19 @@ public class BlogController {
     @RequestMapping("blogList")
     public Object blogList(@RequestBody PageIn<Blog> pageIn) {
         QueryWrapper<Blog> queryWrapper = getBlogQuery(pageIn);
-        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("create_time"));
+        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
+                queryWrapper.eq("state", 1).orderByDesc("create_time"));
+
+    }
+
+    @RequestMapping("allBlogList")
+    public Object allBlogList(@RequestBody PageIn<Blog> pageIn) {
+        QueryWrapper<Blog> queryWrapper = getBlogQuery(pageIn);
+        if (!StringUtils.isEmpty(pageIn.getT().getState())) {
+            queryWrapper.eq("state", pageIn.getT().getState());
+        }
+        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
+                queryWrapper.orderByDesc("state", "create_time"));
 
     }
 
@@ -59,14 +72,11 @@ public class BlogController {
     }
 
 
-
-
-
-
     @RequestMapping("blogListOrderByRead")
     public Object blogListOrderByRead(@RequestBody PageIn<Blog> pageIn) {
         QueryWrapper<Blog> queryWrapper = getBlogQuery(pageIn);
-        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()), queryWrapper.orderByDesc("read_count"));
+        return blogService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
+                queryWrapper.eq("state", 1).orderByDesc("read_count"));
 
     }
 
@@ -100,7 +110,7 @@ public class BlogController {
     @RequestMapping("freshBlog")
     public Object freshBlog(@RequestBody Blog blog) {
         if (blog.getUserId() != null) {
-            blogService.update(blog, new UpdateWrapper<Blog>().eq("userId", blog.getUserId()));
+            blogService.update(blog, new UpdateWrapper<Blog>().eq("user_id", blog.getUserId()));
         }
         if (blog.getCategoryId() != null) {
             blogService.update(blog, new UpdateWrapper<Blog>().eq("categoryId", blog.getCategoryId()));

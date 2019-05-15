@@ -33,10 +33,14 @@ public class NewsCommentController {
             return newsCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
                     new QueryWrapper<>(pageIn.getT()).orderByDesc("create_time"));
         }
+        QueryWrapper<NewsComment> queryWrapper = new QueryWrapper<NewsComment>().like("news_title", pageIn.getT().getNewsTitle() == null ? "" : pageIn.getT().getNewsTitle())
+                .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName())
+                .orderByDesc("create_time");
+        if (pageIn.getT().getUserId() != null) {
+            queryWrapper.eq("user_id", pageIn.getT().getUserId());
+        }
         return newsCommentService.page(new Page<>(pageIn.getCurrent(), pageIn.getSize()),
-                new QueryWrapper<NewsComment>().like("news_title", pageIn.getT().getNewsTitle() == null ? "" : pageIn.getT().getNewsTitle())
-                        .like("user_name", pageIn.getT().getUserName() == null ? "" : pageIn.getT().getUserName())
-                        .orderByDesc("create_time"));
+                queryWrapper);
     }
 
     @RequestMapping("deleteComment")
@@ -62,10 +66,10 @@ public class NewsCommentController {
     @RequestMapping("freshComment")
     public boolean freshComment(@RequestBody NewsComment newsComment) {
         if (newsComment.getNewsId() != null) {
-            newsCommentService.update(newsComment, new UpdateWrapper<NewsComment>().eq("newsId", newsComment.getNewsId()));
+            newsCommentService.update(newsComment, new UpdateWrapper<NewsComment>().eq("news_id", newsComment.getNewsId()));
         }
         if (newsComment.getCommentId() != null) {
-            newsCommentService.update(newsComment, new UpdateWrapper<NewsComment>().eq("userId", newsComment.getUserId()));
+            newsCommentService.update(newsComment, new UpdateWrapper<NewsComment>().eq("user_id", newsComment.getUserId()));
         }
         return true;
     }

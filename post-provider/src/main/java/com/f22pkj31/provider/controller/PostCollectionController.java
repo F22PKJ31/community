@@ -45,10 +45,10 @@ public class PostCollectionController {
     @RequestMapping("freshCollection")
     public Object freshCollection(@RequestBody PostCollection postCollection) {
         if (postCollection.getUserId() != null) {
-            postCollectionService.update(postCollection, new UpdateWrapper<PostCollection>().eq("userId", postCollection.getUserId()));
+            postCollectionService.update(postCollection, new UpdateWrapper<PostCollection>().eq("user_id", postCollection.getUserId()));
         }
         if (postCollection.getPostId() != null) {
-            postCollectionService.update(postCollection, new UpdateWrapper<PostCollection>().eq("postId", postCollection.getPostId()));
+            postCollectionService.update(postCollection, new UpdateWrapper<PostCollection>().eq("post_id", postCollection.getPostId()));
         }
         return true;
     }

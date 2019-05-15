@@ -3,8 +3,6 @@ package com.f22pkj31.consumer.controller;
 
 import com.f22pkj31.community.entity.*;
 import com.f22pkj31.consumer.service.NewsClientService;
-import com.f22pkj31.consumer.service.NewsCollectionClientService;
-import com.f22pkj31.consumer.service.NewsCommentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +27,14 @@ public class NewsController {
     @Autowired
     private NewsClientService newsClientService;
 
-    @Autowired
-    private NewsCommentClientService newsCommentClientService;
-
-    @Autowired
-    private NewsCollectionClientService newsCollectionClientService;
-
     @RequestMapping("newsList")
     public Object newsList(@RequestBody PageIn<News> pageIn) {
         return newsClientService.newsList(pageIn);
+    }
+
+    @RequestMapping("allNewsList")
+    public Object allNewsList(@RequestBody PageIn<News> pageIn) {
+        return newsClientService.allNewsList(pageIn);
     }
 
     @RequestMapping("sendNews")
@@ -47,7 +44,7 @@ public class NewsController {
 
     @RequestMapping("deleteNews")
     public Object deleteNews(@RequestBody CommonId commonId) {
-        newsCommentClientService.deleteComment(new NewsComment().setNewsId(commonId.getId()));
+        newsClientService.deleteComment(new NewsComment().setNewsId(commonId.getId()));
         return newsClientService.deleteNews(commonId);
     }
 
@@ -59,8 +56,8 @@ public class NewsController {
     @RequestMapping("updateNews")
     public Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) {
         newsClientService.updateNews(news.setCreateTime(LocalDateTime.now()), file);
-        newsCommentClientService.freshComment(new NewsComment().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
-        newsCollectionClientService.freshCollection(new NewsCollection().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
+        newsClientService.freshComment(new NewsComment().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
+        newsClientService.freshCollection(new NewsCollection().setNewsId(news.getNewsId()).setNewsTitle(news.getTitle()));
         return true;
     }
 

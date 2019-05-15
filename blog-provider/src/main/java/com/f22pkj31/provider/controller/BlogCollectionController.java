@@ -9,13 +9,11 @@ import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.PageIn;
 import com.f22pkj31.provider.service.IBlogCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/provider/blog")
 public class BlogCollectionController {
 
@@ -48,10 +46,10 @@ public class BlogCollectionController {
     @RequestMapping("freshCollection")
     public Object freshCollection(@RequestBody BlogCollection blogCollection) {
         if (blogCollection.getUserId() != null) {
-            blogCollectionService.update(blogCollection, new UpdateWrapper<BlogCollection>().eq("userId", blogCollection.getUserId()));
+            blogCollectionService.update(blogCollection, new UpdateWrapper<BlogCollection>().eq("user_id", blogCollection.getUserId()));
         }
         if (blogCollection.getBlogId() != null) {
-            blogCollectionService.update(blogCollection, new UpdateWrapper<BlogCollection>().eq("blogId", blogCollection.getBlogId()));
+            blogCollectionService.update(blogCollection, new UpdateWrapper<BlogCollection>().eq("blog_id", blogCollection.getBlogId()));
         }
         return true;
     }

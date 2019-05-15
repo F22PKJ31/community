@@ -2,11 +2,12 @@ package com.f22pkj31.community.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -43,6 +44,10 @@ public class News implements Serializable {
     private String userName;
 
     private String imgUrl;
+
+    private Integer state;
+
+    private String reason;
 
 
 }

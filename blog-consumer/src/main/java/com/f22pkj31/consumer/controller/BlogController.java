@@ -3,8 +3,6 @@ package com.f22pkj31.consumer.controller;
 
 import com.f22pkj31.community.entity.*;
 import com.f22pkj31.consumer.service.BlogClientService;
-import com.f22pkj31.consumer.service.BlogCollectionClientService;
-import com.f22pkj31.consumer.service.BlogCommentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,15 +25,15 @@ public class BlogController {
     @Autowired
     private BlogClientService blogClientService;
 
-    @Autowired
-    private BlogCommentClientService blogCommentClientService;
-
-    @Autowired
-    private BlogCollectionClientService blogCollectionClientService;
 
     @RequestMapping("blogList")
     public Object blogList(@RequestBody PageIn<Blog> pageIn) {
         return blogClientService.blogList(pageIn);
+    }
+
+    @RequestMapping("allBlogList")
+    public Object allBlogList(@RequestBody PageIn<Blog> pageIn) {
+        return blogClientService.allBlogList(pageIn);
     }
 
     @RequestMapping("sendBlog")
@@ -45,7 +43,7 @@ public class BlogController {
 
     @RequestMapping("deleteBlog")
     public Object deleteBlog(@RequestBody CommonId commonId) {
-        blogCommentClientService.deleteComment(new BlogComment().setBlogId(commonId.getId()));
+        blogClientService.deleteComment(new BlogComment().setBlogId(commonId.getId()));
         return blogClientService.deleteBlog(commonId);
     }
 
@@ -57,8 +55,8 @@ public class BlogController {
     @RequestMapping("updateBlog")
     public Object updateBlog(@RequestBody Blog blog) {
         blogClientService.updateBlog(blog.setCreateTime(LocalDateTime.now()));
-        blogCommentClientService.freshComment(new BlogComment().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
-        blogCollectionClientService.freshCollection(new BlogCollection().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
+        blogClientService.freshComment(new BlogComment().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
+        blogClientService.freshCollection(new BlogCollection().setBlogId(blog.getBlogId()).setBlogTitle(blog.getTitle()));
         return true;
     }
 

@@ -3,7 +3,7 @@ package com.f22pkj31.consumer.controller;
 import com.f22pkj31.community.entity.CommonId;
 import com.f22pkj31.community.entity.NewsCollection;
 import com.f22pkj31.community.entity.PageIn;
-import com.f22pkj31.consumer.service.NewsCollectionClientService;
+import com.f22pkj31.consumer.service.NewsClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,25 +16,25 @@ import java.time.LocalDateTime;
 public class NewsCollectionController {
 
     @Autowired
-    private NewsCollectionClientService newsCollectionClientService;
+    private NewsClientService newsClientService;
 
     @RequestMapping("collectionList")
     public Object collectionList(@RequestBody PageIn<NewsCollection> pageIn) {
-        return newsCollectionClientService.collectionList(pageIn);
+        return newsClientService.collectionList(pageIn);
     }
 
     @RequestMapping("deleteCollection")
     public Object deleteCollection(@RequestBody CommonId commonId) {
-        return newsCollectionClientService.deleteCollection(commonId);
+        return newsClientService.deleteCollection(commonId);
     }
 
     @RequestMapping("collectionListByUserId")
     public Object collectionListByUserId(@RequestBody PageIn<NewsCollection> pageIn) {
-        return newsCollectionClientService.collectionListByUserId(pageIn);
+        return newsClientService.collectionListByUserId(pageIn);
     }
 
     @RequestMapping("saveCollection")
     public Object sendCollection(@RequestBody NewsCollection newsCollection) {
-        return newsCollectionClientService.sendCollection(newsCollection.setCreateTime(LocalDateTime.now()));
+        return newsClientService.sendCollection(newsCollection.setCreateTime(LocalDateTime.now()));
     }
 }

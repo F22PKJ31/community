@@ -48,10 +48,10 @@ public class NewsCollectionController {
     @RequestMapping("freshCollection")
     public Object freshCollection(@RequestBody NewsCollection newsCollection) {
         if (newsCollection.getUserId() != null) {
-            newsCollectionService.update(newsCollection, new UpdateWrapper<NewsCollection>().eq("userId", newsCollection.getUserId()));
+            newsCollectionService.update(newsCollection, new UpdateWrapper<NewsCollection>().eq("user_id", newsCollection.getUserId()));
         }
         if (newsCollection.getNewsId() != null) {
-            newsCollectionService.update(newsCollection, new UpdateWrapper<NewsCollection>().eq("newsId", newsCollection.getNewsId()));
+            newsCollectionService.update(newsCollection, new UpdateWrapper<NewsCollection>().eq("news_id", newsCollection.getNewsId()));
         }
         return true;
     }
