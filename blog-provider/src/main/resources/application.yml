@@ -3,11 +3,7 @@ spring:
     druid:
       url: jdbc:mysql://127.0.0.1:3306/community?useUnicode=true&useSSL=false&characterEncoding=utf8
       username: root
-      password: ZQR/GqtQMf546A6NoQdsi6LphSKVuUbUoiD1NNBpYknMdCuNt5kU910Njux1HvZQvItaIsL7rkfHXukhDxPQbQ==
-      connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
-      filter:
-        wall:
-          enabled: true
+      password: root
   cloud:
     nacos:
       discovery:
@@ -24,6 +20,3 @@ logging:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-
-private-key: MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT0wggE5AgEAAkEAkQ6LMa4D4vGianMS1p7ZvK42fJQQEMbb4H9gjkgiKe5mEycElVFtM/Be3xuIEZ7wNx4SZt2+dK2oPs9aZPmJewIDAQABAkBPv00rLN4aIHoIR+dtcruGDckKyGPktU8gpyawUlvl7MSChf3y5DjjR1POgwvnkrAu7hHIODTLS99TfVy3ZPfxAiEAzX197U/ZeGOC/Zyf2NA0A7fX+i79IvuR2Y9lD4O6cscCIQC0tkUPiN4Aq07nuC6BS3XPigPa3ri2KejQ67gbaW0/rQIgZVa+A4qddQGeV/Ql4IbNIAhKOtdxfw8RnnlZHY2ZJYECID+up8Gkss87j0/bORA5PmgHs/oSWLdhJ3lQSA3o5iX1AiB/SbYw2RnXnPfnC20QnrK3VcPRohIbaRupA9XInOBtFw==
-public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJEOizGuA+LxompzEtae2byuNnyUEBDG2+B/YI5IIinuZhMnBJVRbTPwXt8biBGe8DceEmbdvnStqD7PWmT5iXsCAwEAAQ==

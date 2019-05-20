@@ -38,7 +38,7 @@ public class UserController {
     private NewsClientService newsClientService;
 
     @RequestMapping("addUser")
-    public boolean addUser(@RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         return userClientService.addUser(user.setCreateTime(LocalDateTime.now()));
     }
 

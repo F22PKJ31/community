@@ -68,7 +68,7 @@ public class NewsController {
     @RequestMapping("sendNews")
     public Object sendNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         upLoadFile(news, file);
-        return newsService.save(news);
+        return newsService.saveOrUpdate(news);
     }
 
 
@@ -85,7 +85,7 @@ public class NewsController {
     @RequestMapping("updateNews")
     public Object updateNews(@RequestBody News news, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         upLoadFile(news, file);
-        return newsService.updateById(news);
+        return newsService.saveOrUpdate(news);
     }
 
     @RequestMapping("newsListOrderByRead")

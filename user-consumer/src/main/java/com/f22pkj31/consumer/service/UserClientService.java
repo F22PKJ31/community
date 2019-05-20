@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface UserClientService {
 
     @RequestMapping("addUser")
-    boolean addUser(@RequestBody User user);
+    User addUser(@RequestBody User user);
 
     @RequestMapping("updateUser")
     boolean updateUser(@RequestBody User user);

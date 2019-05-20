@@ -29,8 +29,9 @@ public class UserController {
     private IUserService userService;
 
     @RequestMapping("addUser")
-    public boolean addUser(@RequestBody User user) {
-        return userService.save(user);
+    public User addUser(@RequestBody User user) {
+        userService.save(user);
+        return user;
     }
 
     @RequestMapping("updateUser")

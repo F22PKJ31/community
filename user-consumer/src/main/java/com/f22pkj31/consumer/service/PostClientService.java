@@ -1,7 +1,8 @@
 package com.f22pkj31.consumer.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.f22pkj31.community.entity.*;
+import com.f22pkj31.community.entity.Post;
+import com.f22pkj31.community.entity.PostCollection;
+import com.f22pkj31.community.entity.PostComment;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface PostClientService {
 
     @RequestMapping("freshPost")
-    public Object freshPost(@RequestBody Post post);
+    Object freshPost(@RequestBody Post post);
 
     @RequestMapping("freshComment")
-    public boolean freshComment(@RequestBody PostComment postComment);
+    boolean freshComment(@RequestBody PostComment postComment);
 
     @RequestMapping("freshCollection")
-    public Object freshCollection(@RequestBody PostCollection postCollection);
+    Object freshCollection(@RequestBody PostCollection postCollection);
 }
